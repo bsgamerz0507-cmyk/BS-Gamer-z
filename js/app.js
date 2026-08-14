@@ -1384,62 +1384,40 @@ async function loadYouTubeGallery() {
         const response = await fetch("data/youtube.json");
         const videos = await response.json();
 
-        const grid = document.getElementById("youtubeContentGrid");
-        if (!grid || !videos.length) return;
+        if (!videos.length) return;
 
-        // Remove the loading card
-        grid.innerHTML = "";
+        // Convert YouTube videos into your website's content format
+        const youtubeContent = videos.map(video => ({
+            type: video.url.includes("/shorts/") ? "short" : "video",
+            title: video.title,
+            description: "Latest upload from BS Gamer_z",
+            url: video.url,
+            category: "YouTube",
+            date: new Date(video.published).toISOString().split("T")[0],
+            thumbnail: video.thumbnail,
+            isAuto: true
+        }));
 
-        // Show the latest 9 uploads
-        videos.slice(0, 9).forEach(video => {
+        // Keep manual content
+        const manualContent = JSON.parse(localStorage.getItem("contentData")) || [];
 
-            const uploadDate =
-                new Date(video.published).toLocaleDateString("en-IN");
+        // Remove old auto-generated items before adding new ones
+        const onlyManual = manualContent.filter(item => !item.isAuto);
 
-            const card = document.createElement("div");
+        const merged = [...youtubeContent, ...onlyManual];
 
-            card.className = "card";
+        localStorage.setItem("contentData", JSON.stringify(merged));
 
-            card.innerHTML = `
-                <div class="thumbnail image-thumb">
-                    <img src="${video.thumbnail}" alt="${video.title}">
-                </div>
+        // Use your existing rendering system
+        if (typeof renderContent === "function") {
+            renderContent();
+        }
 
-                <div class="card-content">
-
-                    <span class="content-type">YOUTUBE</span>
-
-                    <h3>${video.title}</h3>
-
-                    <p>Latest upload from BS Gamer_z</p>
-
-                    <div class="card-footer">
-
-                        <span class="date">${uploadDate}</span>
-
-                        <a
-                            href="${video.url}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="watch-btn"
-                        >
-                            ▶ Watch
-                        </a>
-
-                    </div>
-
-                </div>
-            `;
-
-            grid.appendChild(card);
-
-        });
+        if (typeof updateDashboard === "function") {
+            updateDashboard();
+        }
 
     } catch (error) {
-
-        console.error("YouTube gallery error:", error);
-
+        console.error("YouTube sync error:", error);
     }
 }
-
-loadYouTubeGallery();
