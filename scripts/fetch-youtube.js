@@ -5,22 +5,48 @@ const API_KEY = process.env.YOUTUBE_API_KEY;
 
 async function fetchYouTube() {
 
-    const searchURL =
-        `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=20&type=video`;
+    let allItems = [];
+let nextPageToken = "";
 
-    const searchData =
-        await fetch(searchURL).then(r => r.json());
+do {
+    const searchURL =
+        `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}` +
+        `&channelId=${CHANNEL_ID}` +
+        `&part=snippet,id` +
+        `&order=date` +
+        `&maxResults=50` +
+        `&type=video` +
+        (nextPageToken ? `&pageToken=${nextPageToken}` : "");
+
+    const searchData = await fetch(searchURL).then(r => r.json());
+
+    allItems.push(...searchData.items);
+
+    nextPageToken = searchData.nextPageToken || "";
+
+} while (nextPageToken);
 
     const ids =
-        searchData.items.map(item => item.id.videoId).join(",");
+        allItems.map(item => item.id.videoId);
+
+    let detailsItems = [];
+
+for (let i = 0; i < ids.length; i += 50) {
+
+    const chunk = ids.slice(i, i + 50).join(",");
 
     const detailsURL =
-        `https://www.googleapis.com/youtube/v3/videos?key=${API_KEY}&part=contentDetails,liveStreamingDetails,snippet&id=${ids}`;
+        `https://www.googleapis.com/youtube/v3/videos?key=${API_KEY}` +
+        `&part=contentDetails,liveStreamingDetails,snippet&id=${chunk}`;
 
     const details =
         await fetch(detailsURL).then(r => r.json());
 
-    const videos = details.items.map(item => {
+    detailsItems.push(...details.items);
+
+}
+
+const videos = detailsItems.map(item => {
 
         const duration =
             item.contentDetails.duration;
