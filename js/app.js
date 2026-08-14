@@ -1344,3 +1344,25 @@ document.querySelectorAll(".nav-btn[data-nav]").forEach(function(btn){
     });
 
 });
+async function loadLatestYouTubeVideos() {
+    try {
+        const response = await fetch("data/youtube.json");
+        const videos = await response.json();
+
+        if (!videos.length) return;
+
+        const latest = videos[0];
+
+        const latestImage = document.querySelector(".featured-image img");
+        const latestTitle = document.querySelector(".featured-title");
+        const latestButton = document.querySelector(".watch-btn");
+
+        if (latestImage) latestImage.src = latest.thumbnail;
+        if (latestTitle) latestTitle.textContent = latest.title;
+        if (latestButton) latestButton.href = latest.url;
+    } catch (err) {
+        console.error("Failed to load YouTube data:", err);
+    }
+}
+
+loadLatestYouTubeVideos();
