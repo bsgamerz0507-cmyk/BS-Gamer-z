@@ -1353,13 +1353,26 @@ async function loadLatestYouTubeVideos() {
 
         const latest = videos[0];
 
-        const latestImage = document.querySelector(".featured-image img");
-        const latestTitle = document.querySelector(".featured-title");
-        const latestButton = document.querySelector(".watch-btn");
+        // Featured thumbnail
+        const thumbnail = document.getElementById("featuredThumbnail");
+        thumbnail.innerHTML = `
+            <img src="${latest.thumbnail}" alt="${latest.title}">
+        `;
 
-        if (latestImage) latestImage.src = latest.thumbnail;
-        if (latestTitle) latestTitle.textContent = latest.title;
-        if (latestButton) latestButton.href = latest.url;
+        // Featured title
+        document.getElementById("featuredTitle").textContent = latest.title;
+
+        // Description
+        document.getElementById("featuredDescription").textContent =
+            "Latest upload from BS Gamer_z.";
+
+        // Upload date
+        document.getElementById("featuredDate").textContent =
+            new Date(latest.published).toLocaleDateString();
+
+        // Watch button
+        document.getElementById("featuredWatch").href = latest.url;
+
     } catch (err) {
         console.error("Failed to load YouTube data:", err);
     }
