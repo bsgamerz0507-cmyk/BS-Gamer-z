@@ -1379,3 +1379,67 @@ async function loadLatestYouTubeVideos() {
 }
 
 loadLatestYouTubeVideos();
+async function loadYouTubeGallery() {
+    try {
+        const response = await fetch("data/youtube.json");
+        const videos = await response.json();
+
+        const grid = document.getElementById("youtubeContentGrid");
+        if (!grid || !videos.length) return;
+
+        // Remove the loading card
+        grid.innerHTML = "";
+
+        // Show the latest 9 uploads
+        videos.slice(0, 9).forEach(video => {
+
+            const uploadDate =
+                new Date(video.published).toLocaleDateString("en-IN");
+
+            const card = document.createElement("div");
+
+            card.className = "card";
+
+            card.innerHTML = `
+                <div class="thumbnail image-thumb">
+                    <img src="${video.thumbnail}" alt="${video.title}">
+                </div>
+
+                <div class="card-content">
+
+                    <span class="content-type">YOUTUBE</span>
+
+                    <h3>${video.title}</h3>
+
+                    <p>Latest upload from BS Gamer_z</p>
+
+                    <div class="card-footer">
+
+                        <span class="date">${uploadDate}</span>
+
+                        <a
+                            href="${video.url}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="watch-btn"
+                        >
+                            ▶ Watch
+                        </a>
+
+                    </div>
+
+                </div>
+            `;
+
+            grid.appendChild(card);
+
+        });
+
+    } catch (error) {
+
+        console.error("YouTube gallery error:", error);
+
+    }
+}
+
+loadYouTubeGallery();

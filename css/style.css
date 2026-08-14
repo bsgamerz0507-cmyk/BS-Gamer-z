@@ -2065,3 +2065,17 @@ html.light-theme #contactPageInfo a{
     background:#1d4ed8;
     transform:translateY(-2px);
 }
+/* YouTube Auto Gallery */
+
+.image-thumb{
+    height:200px;
+    overflow:hidden;
+    border-radius:12px;
+}
+
+.image-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
