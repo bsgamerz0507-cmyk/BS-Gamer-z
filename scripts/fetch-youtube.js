@@ -1,50 +1,68 @@
 const fs = require("fs");
 
 const CHANNEL_ID = "UC_DHq9eu17O5QFfVvne1Htg";
+const API_KEY = process.env.YOUTUBE_API_KEY;
 
-async function fetchVideos() {
+async function fetchYouTube() {
 
-    const url =
-        `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+    const searchURL =
+        `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=20&type=video`;
 
-    const response =
-        await fetch(url);
+    const searchData =
+        await fetch(searchURL).then(r => r.json());
 
-    const xml =
-        await response.text();
+    const ids =
+        searchData.items.map(item => item.id.videoId).join(",");
 
-    const entries =
-        [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)];
+    const detailsURL =
+        `https://www.googleapis.com/youtube/v3/videos?key=${API_KEY}&part=contentDetails,liveStreamingDetails,snippet&id=${ids}`;
 
-    const videos =
-        entries.map(entry => {
+    const details =
+        await fetch(detailsURL).then(r => r.json());
 
-            const block = entry[1];
+    const videos = details.items.map(item => {
 
-            const title =
-                block.match(/<title>(.*?)<\/title>/)?.[1] || "";
+        const duration =
+            item.contentDetails.duration;
 
-            const videoId =
-                block.match(/<yt:videoId>(.*?)<\/yt:videoId>/)?.[1] || "";
+        const live =
+            item.snippet.liveBroadcastContent;
 
-            const published =
-                block.match(/<published>(.*?)<\/published>/)?.[1] || "";
+        let type = "video";
 
-            return {
+        if (live === "live" || live === "upcoming") {
 
-                title,
+            type = "live";
 
-                videoId,
+        } else {
 
-                url: `https://youtu.be/${videoId}`,
+            const seconds = durationToSeconds(duration);
 
-                thumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+            if (seconds <= 60) {
 
-                published
+                type = "short";
 
-            };
+            }
 
-        });
+        }
+
+        return {
+
+            type,
+            title: item.snippet.title,
+            videoId: item.id,
+            url:
+                type === "short"
+                    ? `https://www.youtube.com/shorts/${item.id}`
+                    : `https://www.youtube.com/watch?v=${item.id}`,
+            thumbnail:
+                item.snippet.thumbnails.high.url,
+            published:
+                item.snippet.publishedAt
+
+        };
+
+    });
 
     fs.mkdirSync("data", { recursive: true });
 
@@ -53,7 +71,19 @@ async function fetchVideos() {
         JSON.stringify(videos, null, 2)
     );
 
-    console.log("YouTube data saved successfully!");
 }
 
-fetchVideos().catch(console.error);
+function durationToSeconds(duration) {
+
+    const match =
+        duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+
+    const h = Number(match?.[1] || 0);
+    const m = Number(match?.[2] || 0);
+    const s = Number(match?.[3] || 0);
+
+    return h * 3600 + m * 60 + s;
+
+}
+
+fetchYouTube().catch(console.error);

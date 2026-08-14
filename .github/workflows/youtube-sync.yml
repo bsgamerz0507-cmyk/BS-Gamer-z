@@ -21,8 +21,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Fetch latest YouTube uploads
-        run: node scripts/fetch-youtube.js
+      -- name: Fetch latest YouTube uploads
+  env:
+    YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+  run: node scripts/fetch-youtube.js
 
       - name: Commit updated data
         run: |
