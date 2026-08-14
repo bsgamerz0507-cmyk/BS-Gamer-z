@@ -216,25 +216,17 @@ function createContentCard(content) {
 
             </div>
 
-            <div class="management-buttons">
+           ${content.isAuto ? "" : `
+<div class="management-buttons">
+    <button type="button" class="edit-btn" data-id="${content.id}">
+        ✏️ Edit
+    </button>
 
-                <button
-                    type="button"
-                    class="edit-btn"
-                    data-id="${content.id}"
-                >
-                    ✏️ Edit
-                </button>
-
-                <button
-                    type="button"
-                    class="delete-btn"
-                    data-id="${content.id}"
-                >
-                    🗑️ Delete
-                </button>
-
-            </div>
+    <button type="button" class="delete-btn" data-id="${content.id}">
+        🗑️ Delete
+    </button>
+</div>
+`}
 
         </div>
     `;
