@@ -1,0 +1,2067 @@
+/* ==========================================
+   BS Gamer_z - Main Styles
+   ========================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0f0f0f;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+
+/* ==========================================
+   HEADER
+   ========================================== */
+
+header {
+    background: #181818;
+    padding: 25px 20px;
+    border-bottom: 1px solid #333;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+/* ==========================================
+   HEADER LOGO
+   ========================================== */
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+.site-logo{
+    width:72px;
+    height:72px;
+    object-fit:cover;
+    border-radius:50%;
+    display:block;
+
+    /* Gaming glow */
+    border:3px solid #ff1a1a;
+    box-shadow:
+        0 0 12px rgba(255,0,0,.7),
+        0 0 24px rgba(255,0,0,.35);
+
+    transition:.3s ease;
+}
+
+.site-logo:hover{
+    transform:scale(1.08) rotate(-3deg);
+    box-shadow:
+        0 0 18px rgba(255,0,0,.9),
+        0 0 36px rgba(255,0,0,.45);
+}
+
+.logo span{
+    font-size:32px;
+    font-weight:800;
+    color:#ffffff;
+    letter-spacing:.5px;
+}
+
+.logo span::first-letter{
+    color:#ff0000;
+}
+
+html.light-theme .logo span{
+    color:#222 !important;
+}
+
+.logo span{
+    font-size:24px;
+    font-weight:700;
+    color:white;
+}
+
+html.light-theme .logo span {
+    color: #222222 !important;
+}
+
+
+/* ==========================================
+   NAVIGATION
+   ========================================== */
+
+nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: #cccccc;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+    background: #272727;
+    color: #ffffff;
+}
+
+
+/* ==========================================
+   SETTINGS BUTTON
+   ========================================== */
+
+.settings-btn {
+    background: #222222;
+    color: #ffffff;
+    border: 1px solid #444444;
+    padding: 9px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.settings-btn:hover {
+    background: #333333;
+}
+
+
+/* ==========================================
+   HERO
+   ========================================== */
+
+.hero {
+    text-align: center;
+    padding: 55px 20px;
+    background: linear-gradient(
+        180deg,
+        #181818 0%,
+        #0f0f0f 100%
+    );
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 12px;
+}
+
+.hero h1 span {
+    color: #ff0000;
+}
+
+.hero p {
+    color: #aaaaaa;
+    font-size: 17px;
+}
+
+
+/* ==========================================
+   STATISTICS
+   ========================================== */
+
+.stats {
+    max-width: 1000px;
+    margin: -20px auto 35px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 15px;
+    position: relative;
+}
+
+.stat-card {
+    background: #181818;
+    border: 1px solid #333333;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stat-icon {
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.stat-number {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.stat-label {
+    color: #999999;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+
+/* ==========================================
+   MAIN CONTAINER
+   ========================================== */
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px 50px;
+}
+
+
+/* ==========================================
+   SECTION HEADER
+   ========================================== */
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 24px;
+}
+
+
+/* ==========================================
+   SEARCH
+   ========================================== */
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.search-box input {
+    flex: 1;
+    background: #181818;
+    border: 1px solid #333333;
+    border-radius: 7px;
+    padding: 13px 15px;
+    color: #ffffff;
+    outline: none;
+    font-size: 15px;
+}
+
+.search-box input:focus {
+    border-color: #ff0000;
+}
+
+
+/* ==========================================
+   CATEGORY FILTERS
+   ========================================== */
+
+.categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.category {
+    background: #272727;
+    border: 1px solid #333333;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.category:hover,
+.category.active {
+    background: #ff0000;
+    border-color: #ff0000;
+}
+
+
+/* ==========================================
+   CONTENT GRID
+   ========================================== */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+
+/* ==========================================
+   CONTENT CARD
+   ========================================== */
+
+.card {
+    background: #181818;
+    border: 1px solid #333333;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: #555555;
+}
+
+.thumbnail {
+    width: 100%;
+    height: 180px;
+    background: #272727;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 45px;
+}
+
+.youtube-thumbnail {
+    width: 100%;
+    height: 100%;
+    min-height: 180px;
+    object-fit: cover;
+    display: block;
+}
+
+.thumbnail-icon {
+    font-size: 60px;
+}
+
+.card-content {
+    padding: 17px;
+}
+
+.content-type {
+    display: inline-block;
+    background: #272727;
+    color: #cccccc;
+    padding: 5px 9px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.card p {
+    color: #999999;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.watch-btn {
+    display: inline-block;
+    background: #ff0000;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 9px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.watch-btn:hover {
+    background: #cc0000;
+}
+
+.date {
+    color: #777777;
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   ADD CONTENT BUTTON
+   ========================================== */
+
+.add-content-btn {
+    background: #ff0000;
+    color: #ffffff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.add-content-btn:hover {
+    background: #cc0000;
+}
+
+
+/* ==========================================
+   ADD CONTENT FORM
+   ========================================== */
+
+.add-content-form {
+    display: none;
+    background: #181818;
+    border: 1px solid #333333;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.add-content-form.show {
+    display: block;
+}
+
+.add-content-form h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+#contentForm {
+    display: grid;
+    gap: 10px;
+}
+
+#contentForm label {
+    color: #cccccc;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+#contentForm input,
+#contentForm select,
+#contentForm textarea {
+    width: 100%;
+    background: #0f0f0f;
+    border: 1px solid #333333;
+    border-radius: 7px;
+    padding: 12px;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+#contentForm input:focus,
+#contentForm select:focus,
+#contentForm textarea:focus {
+    border-color: #ff0000;
+}
+
+#contentForm textarea {
+    resize: vertical;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.save-content-btn,
+.cancel-content-btn {
+    border: none;
+    padding: 11px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.save-content-btn {
+    background: #ff0000;
+    color: #ffffff;
+}
+
+.save-content-btn:hover {
+    background: #cc0000;
+}
+
+.cancel-content-btn {
+    background: #333333;
+    color: #ffffff;
+}
+
+.cancel-content-btn:hover {
+    background: #444444;
+}
+
+
+/* ==========================================
+   EDIT / DELETE BUTTONS
+   ========================================== */
+
+.management-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.edit-btn,
+.delete-btn {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.edit-btn {
+    background: #333333;
+    color: #ffffff;
+}
+
+.edit-btn:hover {
+    background: #444444;
+}
+
+.delete-btn {
+    background: #5a1515;
+    color: #ffffff;
+}
+
+.delete-btn:hover {
+    background: #7a1c1c;
+}
+
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+
+footer {
+    background: #181818;
+    border-top: 1px solid #333333;
+    text-align: center;
+    padding: 25px 20px;
+    color: #777777;
+    font-size: 13px;
+}
+
+footer strong {
+    color: #ffffff;
+}
+
+
+/* ==========================================
+   SETTINGS PANEL
+   ========================================== */
+
+.settings-panel {
+    display: none;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    width: 380px;
+    max-width: 95%;
+
+    height: 100vh;
+
+    background: #151515;
+
+    border-left: 1px solid #333333;
+
+    padding: 25px;
+
+    overflow-y: auto;
+
+    z-index: 9999;
+
+    box-shadow:
+        -5px 0 25px rgba(0, 0, 0, 0.5);
+}
+
+.settings-panel.show {
+    display: block;
+}
+
+
+/* ==========================================
+   SETTINGS HEADER
+   ========================================== */
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.settings-header h2 {
+    margin: 0;
+}
+
+.close-settings {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+
+/* ==========================================
+   SETTINGS SECTIONS
+   ========================================== */
+
+.settings-section {
+    border: 1px solid #333333;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 20px;
+    background: #1b1b1b;
+}
+
+.settings-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+
+/* ==========================================
+   SETTINGS INPUTS
+   ========================================== */
+
+.settings-section label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    color: #cccccc;
+    font-size: 14px;
+}
+
+.settings-section input,
+.settings-section select {
+    width: 100%;
+    box-sizing: border-box;
+    background: #0f0f0f;
+    color: #ffffff;
+    border: 1px solid #444444;
+    border-radius: 7px;
+    padding: 11px;
+    outline: none;
+}
+
+.settings-section input:focus,
+.settings-section select:focus {
+    border-color: #ff0000;
+}
+
+
+/* ==========================================
+   SAVE SETTINGS
+   ========================================== */
+
+.save-settings-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #ff0000;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.save-settings-btn:hover {
+    background: #cc0000;
+}
+
+
+/* ==========================================
+   SETTINGS APPEARANCE
+   ========================================== */
+
+/*
+   These variables are controlled by settings.js.
+*/
+
+html.bs-settings-active body {
+    font-family:
+        var(--bs-font, Arial, Helvetica, sans-serif) !important;
+
+    background:
+        var(--bs-background, #0f0f0f) !important;
+}
+
+
+/*
+   These sections normally have their own background,
+   so make the selected background visible there too.
+*/
+
+html.bs-settings-active header,
+html.bs-settings-active .hero,
+html.bs-settings-active footer {
+    background:
+        var(--bs-background, #0f0f0f) !important;
+}
+
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+@media (max-width: 900px) {
+
+    .content-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .header-content {
+        flex-direction: column;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .hero {
+        padding: 40px 15px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(3,1fr);
+        padding: 0 15px;
+    }
+
+    .container {
+        padding: 0 15px 40px;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-content {
+        align-items: center;
+    }
+
+    nav {
+        justify-content: center;
+    }
+
+    .settings-panel {
+        width: 100%;
+        max-width: 100%;
+    }
+
+}
+/* ==========================================
+   SOCIAL MEDIA & CONTACT
+   ========================================== */
+
+.footer-content {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.social-links a {
+    display: inline-block;
+    background: #272727;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 9px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.social-links a:hover {
+    background: #ff0000;
+}
+
+.contact-info {
+    margin-top: 15px;
+    color: #999999;
+    font-size: 13px;
+}
+
+.contact-info div {
+    margin-top: 6px;
+}
+
+.contact-info a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    color: #ff0000;
+}
+/* ==========================================
+   PROFESSIONAL FOOTER
+   ========================================== */
+
+.footer-content {
+    max-width: 1200px;
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 30px;
+
+    padding-bottom: 25px;
+}
+
+
+/* ==========================================
+   FOOTER SECTIONS
+   ========================================== */
+
+.footer-section {
+    text-align: center;
+}
+
+
+.footer-section h3 {
+    color: #ffffff;
+
+    font-size: 18px;
+
+    margin-bottom: 10px;
+}
+
+
+.footer-section p {
+    color: #888888;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   SOCIAL LINKS
+   ========================================== */
+
+.social-links {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+
+.social-links a {
+    display: inline-block;
+
+    background: #272727;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    padding: 8px 12px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+
+    transition: 0.2s;
+}
+
+
+.social-links a:hover {
+    background: #ff0000;
+
+    transform: translateY(-2px);
+}
+
+
+/* ==========================================
+   CONTACT INFORMATION
+   ========================================== */
+
+.contact-info {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    align-items: center;
+}
+
+
+.contact-info div {
+    color: #999999;
+
+    font-size: 13px;
+}
+
+
+.contact-info a {
+    color: #ffffff;
+
+    text-decoration: none;
+}
+
+
+.contact-info a:hover {
+    color: #ff0000;
+}
+
+
+/* ==========================================
+   FOOTER BOTTOM
+   ========================================== */
+
+.footer-bottom {
+    border-top: 1px solid #333;
+
+    padding-top: 20px;
+
+    color: #777777;
+
+    font-size: 13px;
+}
+
+
+.footer-bottom strong {
+    color: #ffffff;
+}
+
+
+/* ==========================================
+   MOBILE FOOTER
+   ========================================== */
+
+@media (max-width: 700px) {
+
+    .footer-content {
+        grid-template-columns: 1fr;
+
+        gap: 25px;
+    }
+
+}
+/* ==========================================
+   PROFESSIONAL FOOTER
+   ========================================== */
+
+.footer-content {
+    max-width: 1200px;
+    margin: auto;
+    text-align: center;
+}
+
+.footer-content p {
+    margin-bottom: 15px;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.social-links a {
+    display: inline-block;
+    background: #222222;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 8px 13px;
+    border-radius: 6px;
+    border: 1px solid #333333;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.social-links a:hover {
+    background: #ff0000;
+    border-color: #ff0000;
+}
+
+.contact-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    color: #999999;
+    font-size: 13px;
+}
+
+.contact-info div {
+    display: inline-block;
+}
+
+.contact-info a {
+    color: #cccccc;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    color: #ff0000;
+}
+/* ==========================================
+   SOCIAL MEDIA ICONS
+   ========================================== */
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.social-link i {
+    font-size: 20px;
+}
+
+.social-link:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+/* ==========================================
+   SOCIAL MEDIA ICONS
+   ========================================== */
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.25s ease;
+}
+
+.social-icon {
+    width: 22px;
+    height: 22px;
+    display: block;
+}
+
+.social-link:hover {
+    color: #ff0000;
+    transform: translateY(-2px);
+}
+
+.social-link:hover .youtube-icon {
+    color: #ff0000;
+}
+
+.social-link:hover .instagram-icon {
+    color: #e1306c;
+}
+
+.social-link:hover .facebook-icon {
+    color: #1877f2;
+}
+
+.social-link:hover .x-icon {
+    color: #ffffff;
+}
+
+.contact-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    color: #999999;
+    font-size: 13px;
+}
+
+.contact-info a {
+    color: #aaaaaa;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    color: #ffffff;
+}
+/* ==========================================
+   MOBILE NAVIGATION
+   ========================================== */
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+
+/* ==========================================
+   MOBILE DEVICES
+   ========================================== */
+
+@media (max-width: 600px) {
+
+    .main-nav {
+        width: 100%;
+        gap: 6px;
+    }
+
+    .nav-btn,
+    .settings-btn {
+        padding: 9px 11px;
+        font-size: 13px;
+    }
+
+}
+
+
+/* ==========================================
+   VERY SMALL SCREENS
+   ========================================== */
+
+@media (max-width: 400px) {
+
+    .main-nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+    }
+
+    .nav-btn,
+    .settings-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+}
+/* ==========================================
+   SOCIAL MEDIA FOOTER
+   ========================================== */
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+
+.social-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #ffffff;
+    text-decoration: none;
+
+    background: #222222;
+
+    border: 1px solid #333333;
+
+    padding: 8px 12px;
+
+    border-radius: 7px;
+
+    transition: 0.2s;
+}
+
+
+.social-links a:hover {
+    background: #333333;
+    transform: translateY(-2px);
+}
+
+
+/* ==========================================
+   SOCIAL ICON
+   ========================================== */
+
+.social-icon {
+    width: 22px;
+    height: 22px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+
+    font-size: 17px;
+}
+
+
+/* YouTube */
+
+.youtube-icon {
+    background: #ff0000;
+
+    color: #ffffff;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+}
+
+
+/* Instagram */
+
+.instagram-icon {
+    background:
+        linear-gradient(
+            135deg,
+            #833ab4,
+            #fd1d1d,
+            #fcb045
+        );
+
+    color: #ffffff;
+
+    border-radius: 6px;
+
+    font-size: 19px;
+}
+
+
+/* Facebook */
+
+.facebook-icon {
+    background: #1877f2;
+
+    color: #ffffff;
+
+    border-radius: 50%;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 17px;
+}
+
+
+/* X */
+
+.twitter-icon {
+    background: #000000;
+
+    color: #ffffff;
+
+    border-radius: 5px;
+
+    font-size: 14px;
+}
+/* ==========================================
+   SOCIAL MEDIA FOOTER
+   ========================================== */
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #ffffff;
+    background: #1a1a1a;
+    border: 1px solid #333333;
+    font-size: 14px;
+    transition: all 0.25s ease;
+}
+
+.social-link:hover {
+    transform: translateY(-2px);
+    background: #252525;
+    border-color: #555555;
+}
+
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+    fill: currentColor;
+}
+
+/* YouTube */
+
+.youtube-svg {
+    color: #ff0000;
+}
+
+/* Instagram */
+
+.instagram-svg {
+    color: #e4405f;
+}
+
+/* Facebook */
+
+.facebook-svg {
+    color: #1877f2;
+}
+
+/* X / Twitter */
+
+.twitter-svg {
+    color: #ffffff;
+}
+
+/* Contact information */
+
+.contact-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.contact-info a {
+    color: #cccccc;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.contact-info a:hover {
+    color: #ffffff;
+}
+/* ==========================================
+   IMPROVED LIGHT THEME
+   ========================================== */
+
+html.light-theme body {
+    background: #f5f5f5;
+    color: #222;
+}
+
+/* Header */
+
+html.light-theme header {
+    background: #ffffff;
+    border-bottom: 1px solid #dddddd;
+}
+
+html.light-theme .logo {
+    color: #ff0000;
+}
+
+html.light-theme .logo span {
+    color: #222;
+}
+
+/* Navigation */
+
+html.light-theme .nav-btn {
+    color: #333;
+}
+
+html.light-theme .nav-btn:hover,
+html.light-theme .nav-btn.active {
+    background: #ff0000;
+    color: #ffffff;
+}
+
+/* Hero */
+
+html.light-theme .hero {
+    background: linear-gradient(180deg, #ffffff, #eeeeee);
+}
+
+html.light-theme .hero h1 {
+    color: #222;
+}
+
+html.light-theme .hero p {
+    color: #555;
+}
+
+/* Stats */
+
+html.light-theme .stat-card {
+    background: #ffffff;
+    border-color: #dddddd;
+}
+
+html.light-theme .stat-number {
+    color: #222;
+}
+
+html.light-theme .stat-label {
+    color: #666;
+}
+
+/* Search */
+
+html.light-theme .search-box input {
+    background: #ffffff;
+    color: #222;
+    border-color: #cccccc;
+}
+
+html.light-theme .search-box input::placeholder {
+    color: #777;
+}
+
+/* Categories */
+
+html.light-theme .category {
+    background: #ffffff;
+    color: #333;
+    border-color: #cccccc;
+}
+
+html.light-theme .category:hover,
+html.light-theme .category.active {
+    background: #ff0000;
+    color: #ffffff;
+}
+
+/* Cards */
+
+html.light-theme .card {
+    background: #ffffff;
+    border-color: #dddddd;
+}
+
+html.light-theme .card h3 {
+    color: #222;
+}
+
+html.light-theme .card p {
+    color: #555;
+}
+
+html.light-theme .content-type {
+    background: #eeeeee;
+    color: #444;
+}
+
+html.light-theme .date {
+    color: #777;
+}
+
+/* Add Content Form */
+
+html.light-theme .add-content-form {
+    background: #ffffff;
+    border-color: #dddddd;
+}
+
+html.light-theme #contentForm label {
+    color: #333;
+}
+
+html.light-theme #contentForm input,
+html.light-theme #contentForm select,
+html.light-theme #contentForm textarea {
+    background: #ffffff;
+    color: #222;
+    border-color: #cccccc;
+}
+
+html.light-theme #contentForm input::placeholder,
+html.light-theme #contentForm textarea::placeholder {
+    color: #777;
+}
+
+/* Settings Panel */
+
+html.light-theme .settings-panel {
+    background: #ffffff;
+    color: #222;
+    border-left-color: #dddddd;
+}
+
+html.light-theme .settings-section {
+    background: #f8f8f8;
+    border-color: #dddddd;
+}
+
+html.light-theme .settings-section h3 {
+    color: #222;
+}
+
+html.light-theme .settings-section label {
+    color: #333;
+}
+
+html.light-theme .settings-section input,
+html.light-theme .settings-section select {
+    background: #ffffff;
+    color: #222;
+    border-color: #cccccc;
+}
+
+html.light-theme .settings-section input::placeholder {
+    color: #777;
+}
+
+html.light-theme .close-settings {
+    color: #333;
+}
+
+/* Footer */
+
+html.light-theme footer {
+    background: #ffffff;
+    border-top: 1px solid #dddddd;
+    color: #555;
+}
+
+html.light-theme footer strong {
+    color: #222;
+}
+
+html.light-theme .social-link {
+    background: #f5f5f5;
+    color: #222;
+    border-color: #dddddd;
+}
+
+html.light-theme .social-link:hover {
+    background: #eeeeee;
+}
+
+html.light-theme .contact-info a {
+    color: #444;
+}
+
+html.light-theme .contact-info a:hover {
+    color: #000;
+}
+/* ==========================================
+   HEADER FIX FOR LIGHT THEME
+   ========================================== */
+
+html.light-theme header {
+    background: #ffffff;
+    border-bottom: 1px solid #dddddd;
+}
+
+html.light-theme .logo {
+    color: #ff0000 !important;
+}
+
+html.light-theme .logo span {
+    color: #222222 !important;
+}
+
+html.light-theme .nav-btn {
+    color: #333333 !important;
+}
+
+html.light-theme .nav-btn:hover,
+html.light-theme .nav-btn.active {
+    background: #ff0000;
+    color: #ffffff !important;
+}
+
+html.light-theme .settings-btn {
+    background: #f3f3f3;
+    color: #222222;
+    border-color: #cccccc;
+}
+
+html.light-theme .settings-btn:hover {
+    background: #e6e6e6;
+}
+/* ==========================================
+   HERO FIX FOR LIGHT THEME
+   ========================================== */
+
+html.light-theme .hero h1 {
+    color: #222222 !important;
+}
+
+html.light-theme .hero h1 span {
+    color: #ff0000 !important;
+}
+
+html.light-theme .hero p {
+    color: #555555 !important;
+}
+/* ==========================================
+   FEATURED VIDEO
+   ========================================== */
+
+.featured-video{
+    max-width:1200px;
+    margin:35px auto;
+    padding:25px;
+    display:grid;
+    grid-template-columns:420px 1fr;
+    gap:25px;
+    background:#181818;
+    border:1px solid #333;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.featured-thumbnail{
+    width:100%;
+    aspect-ratio:16/9;
+    background:#272727;
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.featured-thumbnail img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.featured-placeholder{
+    font-size:70px;
+}
+
+.featured-info{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.featured-badge{
+    display:inline-block;
+    width:fit-content;
+    background:#ff0000;
+    color:#fff;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:14px;
+}
+
+.featured-info h2{
+    font-size:34px;
+    margin-bottom:12px;
+    color:#fff;
+}
+
+.featured-info p{
+    color:#b3b3b3;
+    line-height:1.6;
+    margin-bottom:18px;
+}
+
+.featured-meta{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+}
+
+/* Light theme */
+
+html.light-theme .featured-video{
+    background:#ffffff;
+    border-color:#dddddd;
+}
+
+html.light-theme .featured-thumbnail{
+    background:#eeeeee;
+}
+
+html.light-theme .featured-info h2{
+    color:#222;
+}
+
+html.light-theme .featured-info p{
+    color:#555;
+}
+
+/* Mobile */
+
+@media (max-width:900px){
+
+    .featured-video{
+        grid-template-columns:1fr;
+    }
+
+    .featured-info h2{
+        font-size:26px;
+    }
+
+}
+/* ==========================================
+   SCROLL TO TOP BUTTON
+   ========================================== */
+
+.scroll-top-btn{
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    width:52px;
+    height:52px;
+    border:none;
+    border-radius:50%;
+    background:#ff0000;
+    color:#ffffff;
+    font-size:24px;
+    font-weight:bold;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.35);
+    transition:.25s ease;
+    z-index:9998;
+}
+
+.scroll-top-btn.show{
+    display:flex;
+}
+
+.scroll-top-btn:hover{
+    transform:translateY(-3px);
+    background:#cc0000;
+}
+
+html.light-theme .scroll-top-btn{
+    box-shadow:0 8px 20px rgba(0,0,0,.18);
+}
+/* ==========================================
+   BACKUP SECTION
+   ========================================== */
+
+.backup-section{
+    margin-top:20px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.backup-btn{
+    flex:1;
+    min-width:150px;
+    padding:12px 16px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    font-size:15px;
+    transition:.25s ease;
+}
+
+.export-btn{
+    background:#16a34a;
+    color:#fff;
+}
+
+.export-btn:hover{
+    background:#15803d;
+    transform:translateY(-2px);
+}
+
+.import-btn{
+    background:#2563eb;
+    color:#fff;
+}
+
+.import-btn:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+
+/* Light Theme */
+
+html.light-theme .backup-btn{
+    box-shadow:0 4px 10px rgba(0,0,0,.12);
+}
+/* ==========================================
+   CREATOR DASHBOARD
+   ========================================== */
+
+.dashboard-btn{
+    background:#ff0000;
+    color:#fff;
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.25s ease;
+}
+
+.dashboard-btn:hover{
+    background:#cc0000;
+    transform:translateY(-2px);
+}
+
+.dashboard-panel{
+    position:fixed;
+    top:0;
+    right:-450px;
+    width:420px;
+    max-width:100%;
+    height:100vh;
+    background:#181818;
+    border-left:1px solid #333;
+    padding:24px;
+    overflow-y:auto;
+    z-index:9999;
+    transition:right .35s ease;
+}
+
+.dashboard-panel.show{
+    right:0;
+}
+
+.dashboard-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.dashboard-card{
+    background:#242424;
+    border:1px solid #333;
+    border-radius:14px;
+    padding:18px;
+    text-align:center;
+    transition:.25s ease;
+}
+
+.dashboard-card:hover{
+    transform:translateY(-3px);
+    border-color:#ff0000;
+}
+
+.dash-icon{
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+.dash-number{
+    font-size:28px;
+    font-weight:700;
+    color:#ff0000;
+}
+
+.dash-label{
+    color:#b3b3b3;
+    font-size:14px;
+}
+
+.latest-upload-box{
+    background:#242424;
+    border:1px solid #333;
+    border-radius:14px;
+    padding:18px;
+}
+
+.latest-upload-box h3{
+    margin-bottom:10px;
+}
+
+/* Light Theme */
+
+html.light-theme .dashboard-panel{
+    background:#ffffff;
+    border-left:1px solid #ddd;
+}
+
+html.light-theme .dashboard-card,
+html.light-theme .latest-upload-box{
+    background:#f8f8f8;
+    border-color:#ddd;
+}
+
+html.light-theme .dash-label{
+    color:#555;
+}
+
+@media (max-width:600px){
+
+    .dashboard-panel{
+        width:100%;
+    }
+
+}
+/* ==========================================
+   CONTACT PAGE
+   ========================================== */
+
+.contact-page-card{
+    max-width:850px;
+    margin:30px auto;
+    padding:35px;
+    background:#181818;
+    border:1px solid #333;
+    border-radius:18px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+.contact-page-card h2{
+    font-size:32px;
+    margin-bottom:25px;
+    color:#ffffff;
+}
+
+#contactPageInfo{
+    margin-bottom:25px;
+}
+
+#contactPageInfo p{
+    margin:15px 0;
+    font-size:18px;
+    color:#d0d0d0;
+}
+
+#contactPageInfo a{
+    color:#ff3b30;
+    text-decoration:none;
+    font-weight:600;
+}
+
+#contactPageInfo a:hover{
+    text-decoration:underline;
+}
+
+/* Contact page social buttons */
+
+.contact-page-card .social-links{
+    justify-content:center;
+    margin-top:20px;
+}
+
+/* Light Theme */
+
+html.light-theme .contact-page-card{
+    background:#ffffff;
+    border-color:#dddddd;
+    box-shadow:0 8px 24px rgba(0,0,0,.12);
+}
+
+html.light-theme .contact-page-card h2{
+    color:#222222;
+}
+
+html.light-theme #contactPageInfo p{
+    color:#444444;
+}
+
+html.light-theme #contactPageInfo a{
+    color:#d40000;
+}
+/* ==========================================
+   SHARE BUTTON
+   ========================================== */
+
+.share-btn{
+    background:#2563eb;
+    color:#fff;
+    border:none;
+    padding:10px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.25s ease;
+}
+
+.share-btn:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact | BS Gamer_z</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="header-content">
+
+        <div class="logo">
+
+            <img src="images/logo.jpeg" alt="BS Gamer_z Logo" class="site-logo">
+
+            <span>BS Gamer_z</span>
+
+        </div>
+
+        <nav>
+
+            <a href="index.html" class="nav-btn">
+                Home
+            </a>
+
+            <a href="contact.html" class="nav-btn active">
+                Contact
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+<section class="hero">
+
+    <h1>Contact BS Gamer_z</h1>
+
+    <p>
+        For collaborations, sponsorships, business inquiries, and gaming partnerships.
+    </p>
+
+</section>
+
+<main class="container">
+
+    <div class="contact-page-card">
+
+        <h2>Business Contact</h2>
+
+        <div id="contactPageInfo"></div>
+
+        <div id="contactPageSocials" class="social-links"></div>
+
+    </div>
+
+</main>
+
+<footer>
+
+    <div class="footer-content">
+
+        <p>© 2026 <strong>BS Gamer_z</strong></p>
+
+    </div>
+
+</footer>
+
+<script src="js/settings.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const saved =
+        JSON.parse(
+            localStorage.getItem("bs_gamer_z_settings") || "{}"
+        );
+
+    const info =
+        document.getElementById("contactPageInfo");
+
+    const socials =
+        document.getElementById("contactPageSocials");
+
+    if(saved.email){
+
+        info.innerHTML +=
+            `<p>📧 <a href="mailto:${saved.email}">${saved.email}</a></p>`;
+
+    }
+
+    if(saved.phone){
+
+        info.innerHTML +=
+            `<p>📞 <a href="tel:${saved.phone}">${saved.phone}</a></p>`;
+
+    }
+
+    if(saved.website){
+
+        info.innerHTML +=
+            `<p>🌐 <a href="${saved.website}" target="_blank">${saved.website}</a></p>`;
+
+    }
+
+    function add(url,label){
+
+        if(url){
+
+            socials.innerHTML +=
+                `<a class="social-link" href="${url}" target="_blank">${label}</a>`;
+
+        }
+
+    }
+
+    add(saved.youtube,"YouTube");
+    add(saved.instagram,"Instagram");
+    add(saved.facebook,"Facebook");
+    add(saved.twitter,"X");
+
+});
+
+</script>
+
+</body>
+
+</html>
