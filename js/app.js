@@ -1390,7 +1390,7 @@ async function loadYouTubeGallery() {
         // Convert YouTube videos into your website format
         const youtubeContent = videos.map(video => ({
             id: "yt_" + video.videoId,
-            type: video.url.includes("/shorts/") ? "short" : "video",
+            type: video.type,
             title: video.title,
             description: "Latest upload from BS Gamer_z",
             url: video.url,
