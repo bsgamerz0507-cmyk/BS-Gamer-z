@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bsgamerz0507-cmyk.github.io/BS-Gamer-z/sitemap.xml
