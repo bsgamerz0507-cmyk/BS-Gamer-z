@@ -400,7 +400,8 @@ function renderContent() {
         return;
     }
      updateDashboard();
-     updateFeaturedVideo();
+    updateDashboard();
+// updateFeaturedVideo();
     contentGrid.innerHTML = "";
 
     if (contentData.length === 0) {
@@ -1386,38 +1387,33 @@ async function loadYouTubeGallery() {
 
         if (!videos.length) return;
 
-        // Convert YouTube videos into your website's content format
+        // Convert YouTube videos into your website format
         const youtubeContent = videos.map(video => ({
+            id: "yt_" + video.videoId,
             type: video.url.includes("/shorts/") ? "short" : "video",
             title: video.title,
             description: "Latest upload from BS Gamer_z",
             url: video.url,
             category: "YouTube",
             date: new Date(video.published).toISOString().split("T")[0],
-            thumbnail: video.thumbnail,
             isAuto: true
         }));
 
         // Keep manual content
-        const manualContent = JSON.parse(localStorage.getItem("contentData")) || [];
+        const manualContent = contentData.filter(item => !item.isAuto);
 
-        // Remove old auto-generated items before adding new ones
-        const onlyManual = manualContent.filter(item => !item.isAuto);
+        // Merge auto + manual
+        contentData = [...youtubeContent, ...manualContent];
 
-        const merged = [...youtubeContent, ...onlyManual];
+        // Save using your existing storage key
+        saveContent();
 
-        localStorage.setItem("contentData", JSON.stringify(merged));
-
-        // Use your existing rendering system
-        if (typeof renderContent === "function") {
-            renderContent();
-        }
-
-        if (typeof updateDashboard === "function") {
-            updateDashboard();
-        }
+        // Refresh website
+        renderContent();
 
     } catch (error) {
         console.error("YouTube sync error:", error);
     }
 }
+loadLatestYouTubeVideos();
+loadYouTubeGallery();
