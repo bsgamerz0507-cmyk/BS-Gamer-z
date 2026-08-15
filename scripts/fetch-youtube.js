@@ -5,64 +5,71 @@ const API_KEY = process.env.YOUTUBE_API_KEY;
 
 async function fetchYouTube() {
 
-    let allItems = [];
-let nextPageToken = "";
+    // Get uploads playlist ID
+    const channelURL =
+        `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${CHANNEL_ID}&key=${API_KEY}`;
 
-do {
-    const searchURL =
-        `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}` +
-        `&channelId=${CHANNEL_ID}` +
-        `&part=snippet,id` +
-        `&order=date` +
-        `&maxResults=50` +
-        `&type=video` +
-        (nextPageToken ? `&pageToken=${nextPageToken}` : "");
+    const channelData =
+        await fetch(channelURL).then(r => r.json());
 
-    const searchData = await fetch(searchURL).then(r => r.json());
+    const uploadsPlaylist =
+        channelData.items[0].contentDetails.relatedPlaylists.uploads;
 
-    allItems.push(...searchData.items);
+    let playlistItems = [];
+    let nextPageToken = "";
 
-    nextPageToken = searchData.nextPageToken || "";
+    // Fetch every upload from the uploads playlist
+    do {
 
-} while (nextPageToken);
+        const playlistURL =
+            `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=${uploadsPlaylist}&maxResults=50&key=${API_KEY}` +
+            (nextPageToken ? `&pageToken=${nextPageToken}` : "");
 
+        const data =
+            await fetch(playlistURL).then(r => r.json());
+
+        playlistItems.push(...data.items);
+
+        nextPageToken = data.nextPageToken || "";
+
+    } while (nextPageToken);
+
+    // Get full video details in batches of 50
     const ids =
-        allItems.map(item => item.id.videoId);
+        playlistItems.map(item => item.contentDetails.videoId);
 
     let detailsItems = [];
 
-for (let i = 0; i < ids.length; i += 50) {
+    for (let i = 0; i < ids.length; i += 50) {
 
-    const chunk = ids.slice(i, i + 50).join(",");
+        const chunk =
+            ids.slice(i, i + 50).join(",");
 
-    const detailsURL =
-        `https://www.googleapis.com/youtube/v3/videos?key=${API_KEY}` +
-        `&part=contentDetails,liveStreamingDetails,snippet&id=${chunk}`;
+        const detailsURL =
+            `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,liveStreamingDetails,snippet&id=${chunk}&key=${API_KEY}`;
 
-    const details =
-        await fetch(detailsURL).then(r => r.json());
+        const details =
+            await fetch(detailsURL).then(r => r.json());
 
-    detailsItems.push(...details.items);
+        detailsItems.push(...details.items);
 
-}
+    }
 
-const videos = detailsItems.map(item => {
-
-        const duration =
-            item.contentDetails.duration;
-
-        const live =
-            item.snippet.liveBroadcastContent;
+    const videos = detailsItems.map(item => {
 
         let type = "video";
 
-        if (live === "live" || live === "upcoming") {
+        if (
+            item.snippet.liveBroadcastContent === "live" ||
+            item.snippet.liveBroadcastContent === "upcoming"
+        ) {
 
             type = "live";
 
         } else {
 
-            const seconds = durationToSeconds(duration);
+            const seconds =
+                durationToSeconds(item.contentDetails.duration);
 
             if (seconds <= 60) {
 
@@ -81,10 +88,8 @@ const videos = detailsItems.map(item => {
                 type === "short"
                     ? `https://www.youtube.com/shorts/${item.id}`
                     : `https://www.youtube.com/watch?v=${item.id}`,
-            thumbnail:
-                item.snippet.thumbnails.high.url,
-            published:
-                item.snippet.publishedAt
+            thumbnail: item.snippet.thumbnails.high.url,
+            published: item.snippet.publishedAt
 
         };
 
@@ -97,12 +102,14 @@ const videos = detailsItems.map(item => {
         JSON.stringify(videos, null, 2)
     );
 
+    console.log(`Fetched ${videos.length} uploads.`);
+
 }
 
 function durationToSeconds(duration) {
 
     const match =
-        duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+        duration.match(/PT(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?/);
 
     const h = Number(match?.[1] || 0);
     const m = Number(match?.[2] || 0);
