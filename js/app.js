@@ -1,6 +1,5 @@
 // ==========================================
-// BS Gamer_z - Main App
-// Add / Search / Filter / Edit / Delete
+// BS Gamer_z - Main App (FULLY WORKING)
 // ==========================================
 
 const STORAGE_KEY = "bs_gamer_z_content";
@@ -12,1400 +11,640 @@ const STORAGE_KEY = "bs_gamer_z_content";
 const searchInput = document.querySelector(".search-box input");
 const categoryButtons = document.querySelectorAll(".category");
 const contentGrid = document.querySelector(".content-grid");
-
 const addContentButton = document.querySelector(".add-content-btn");
 const addContentForm = document.querySelector("#addContentForm");
 const contentForm = document.querySelector("#contentForm");
 const cancelContentButton = document.querySelector("#cancelContent");
-
 
 // ==========================================
 // CONTENT DATA
 // ==========================================
 
 let contentData = loadContent();
+let allYouTubeVideos = [];
+let allYouTubePosts = [];
 let editingId = null;
+let currentPage = 1;
+const ITEMS_PER_PAGE = 50;
 
 // ==========================================
-// LOAD CONTENT
+// LOAD CONTENT (Manual)
 // ==========================================
 
 function loadContent() {
     const saved = localStorage.getItem(STORAGE_KEY);
-
-    if (!saved) {
-        return [];
-    }
-
+    if (!saved) return [];
     try {
         return JSON.parse(saved);
-    } catch (error) {
-        console.error("Error loading content:", error);
+    } catch {
         return [];
     }
 }
 
-// ==========================================
-// SAVE CONTENT
-// ==========================================
-
 function saveContent() {
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(contentData)
-    );
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(contentData));
 }
 
 // ==========================================
-// YOUTUBE VIDEO ID
+// LOAD YOUTUBE DATA (WITH SKELETON LOADING)
 // ==========================================
 
-function getYouTubeVideoId(url) {
+async function loadYouTubeData() {
+    const container = document.getElementById('youtubeContentGrid') || contentGrid;
+    
+    // Show skeletons immediately
+    showSkeletons(container);
+    
     try {
-        const parsedURL = new URL(url);
-
-        // youtube.com/watch?v=XXXX
-        if (
-            parsedURL.hostname.includes("youtube.com") &&
-            parsedURL.searchParams.get("v")
-        ) {
-            return parsedURL.searchParams.get("v");
-        }
-
-        // youtube.com/shorts/XXXX
-        if (
-            parsedURL.hostname.includes("youtube.com") &&
-            parsedURL.pathname.startsWith("/shorts/")
-        ) {
-            return parsedURL.pathname
-                .split("/shorts/")[1]
-                .split("/")[0];
-        }
-
-        // youtube.com/live/XXXX
-        if (
-            parsedURL.hostname.includes("youtube.com") &&
-            parsedURL.pathname.startsWith("/live/")
-        ) {
-            return parsedURL.pathname
-                .split("/live/")[1]
-                .split("/")[0];
-        }
-
-        // youtu.be/XXXX
-        if (parsedURL.hostname === "youtu.be") {
-            return parsedURL.pathname
-                .substring(1)
-                .split("/")[0];
-        }
-
+        const response = await fetch('data/youtube.json');
+        const data = await response.json();
+        allYouTubeVideos = data.videos || [];
+        allYouTubePosts = data.posts || [];
+        console.log(`✅ Loaded ${allYouTubeVideos.length} YouTube videos`);
+        console.log(`✅ Loaded ${allYouTubePosts.length} community posts`);
+        
+        updateStatistics();
+        updateDashboard();
+        updateFeaturedVideo();
+        
+        const activeCategory = document.querySelector('.category.active');
+        const category = activeCategory ? activeCategory.dataset.category : 'all';
+        renderContent(category);
+        
     } catch (error) {
-        console.error("Invalid YouTube URL:", error);
+        console.error('Failed to load YouTube data:', error);
+        // Show error message
+        container.innerHTML = `<p style="text-align:center;color:#ff0000;padding:40px;">⚠️ Failed to load data. Please refresh.</p>`;
     }
-
-    return null;
 }
 
 // ==========================================
-// YOUTUBE THUMBNAIL
+// RENDER CONTENT WITH PAGINATION
 // ==========================================
 
-function getYouTubeThumbnail(url) {
-    const videoId = getYouTubeVideoId(url);
-
-    if (!videoId) {
-        return null;
+function renderContent(type) {
+    const container = document.getElementById('youtubeContentGrid') || contentGrid;
+    if (!container) return;
+    
+    let allContent = [...contentData];
+    
+    allYouTubeVideos.forEach(video => {
+        allContent.push({
+            id: 'yt_v_' + video.id,
+            type: video.type,
+            title: video.title,
+            description: video.description || '',
+            url: `https://www.youtube.com/watch?v=${video.id}`,
+            thumbnail: video.thumbnail,
+            category: 'YouTube',
+            date: new Date(video.publishedAt).toISOString().split('T')[0],
+            isAuto: true,
+            durationSeconds: video.durationSeconds,
+            isShort: video.isShort,
+            isLive: video.isLive,
+            publishedAt: video.publishedAt
+        });
+    });
+    
+    allYouTubePosts.forEach(post => {
+        allContent.push({
+            id: 'yt_p_' + post.id,
+            type: 'post',
+            title: post.title || 'Community Post',
+            description: post.description || '',
+            url: post.url || `https://www.youtube.com/channel/UC_DHq9eu17O5QFfVvne1Htg/community`,
+            thumbnail: post.thumbnail || '',
+            category: 'YouTube Community',
+            date: new Date(post.publishedAt).toISOString().split('T')[0],
+            isAuto: true,
+            publishedAt: post.publishedAt
+        });
+    });
+    
+    let filtered = allContent;
+    if (type === 'video') {
+        filtered = allContent.filter(item => item.type === 'video');
+    } else if (type === 'short') {
+        filtered = allContent.filter(item => item.type === 'short');
+    } else if (type === 'live') {
+        filtered = allContent.filter(item => item.type === 'live');
+    } else if (type === 'post') {
+        filtered = allContent.filter(item => item.type === 'post');
     }
-
-    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    
+    currentPage = 1;
+    renderPage(filtered, type);
 }
 
 // ==========================================
-// CONTENT ICON
+// RENDER A SINGLE PAGE (WITH CATEGORY ICON + TYPE BADGE)
+// ==========================================
+
+function renderPage(filteredItems, type) {
+    const container = document.getElementById('youtubeContentGrid') || contentGrid;
+    if (!container) return;
+    
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+    const pageItems = filteredItems.slice(start, end);
+    const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
+    
+    console.log(`📊 Showing page ${currentPage} of ${totalPages} (${pageItems.length} items)`);
+    
+    container.innerHTML = '';
+    
+    if (pageItems.length === 0 && currentPage === 1) {
+        container.innerHTML = `<p style="text-align:center;color:#666;padding:40px;">No ${type === 'all' ? '' : type} content found</p>`;
+        return;
+    }
+    
+    pageItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        const icon = getContentIcon(item.type);
+        const thumbnail = item.thumbnail || getYouTubeThumbnail(item.url);
+        
+        // Category icon label (top-left)
+        let categoryLabel = '';
+        if (item.type === 'video') categoryLabel = '🎬 Video';
+        else if (item.type === 'short') categoryLabel = '📱 Short';
+        else if (item.type === 'live') categoryLabel = '🔴 Live';
+        else if (item.type === 'post') categoryLabel = '📝 Post';
+        
+        // Type badge label (bottom-left)
+        let badgeLabel = '';
+        let badgeClass = '';
+        if (item.type === 'video') { badgeLabel = 'Video'; badgeClass = 'video'; }
+        else if (item.type === 'short') { badgeLabel = 'Short'; badgeClass = 'short'; }
+        else if (item.type === 'live') { badgeLabel = 'Live'; badgeClass = 'live'; }
+        else if (item.type === 'post') { badgeLabel = 'Post'; badgeClass = 'post'; }
+        
+        if (item.type === 'post') {
+            card.innerHTML = `
+                <div class="thumbnail" style="background:#272727;min-height:80px;display:flex;align-items:center;justify-content:center;position:relative;">
+                    <span class="category-icon">${categoryLabel}</span>
+                    <span class="type-badge ${badgeClass}">${badgeLabel}</span>
+                    ${thumbnail ? `<img src="${thumbnail}" alt="${item.title}" class="youtube-thumbnail" loading="lazy" style="height:80px;object-fit:cover;">` : `<span class="thumbnail-icon" style="font-size:40px;">📝</span>`}
+                </div>
+                <div class="card-content">
+                    <span class="content-type">📝 POST ${item.isAuto ? '🔁' : ''}</span>
+                    <h3>${escapeHTML(item.title)}</h3>
+                    <p>${escapeHTML(item.description || '').substring(0, 120)}${item.description && item.description.length > 120 ? '...' : ''}</p>
+                    <div class="card-footer">
+                        <span class="date">${item.date || new Date(item.publishedAt || Date.now()).toLocaleDateString()}</span>
+                        <a href="${escapeAttribute(item.url)}" class="watch-btn" target="_blank" rel="noopener noreferrer">View Post</a>
+                    </div>
+                </div>
+            `;
+        } else {
+            card.innerHTML = `
+                <div class="thumbnail" style="position:relative;">
+                    <span class="category-icon">${categoryLabel}</span>
+                    <span class="type-badge ${badgeClass}">${badgeLabel}</span>
+                    ${thumbnail ? `<img src="${thumbnail}" alt="${item.title}" class="youtube-thumbnail" loading="lazy">` : `<span class="thumbnail-icon">${icon}</span>`}
+                </div>
+                <div class="card-content">
+                    <span class="content-type">${item.type.toUpperCase()} ${item.isAuto ? '🔁' : ''}</span>
+                    <h3>${escapeHTML(item.title)}</h3>
+                    <p>${escapeHTML(item.description || '').substring(0, 80)}${item.description && item.description.length > 80 ? '...' : ''}</p>
+                    ${item.category ? `<p>🏷️ ${escapeHTML(item.category)}</p>` : ''}
+                    <div class="card-footer">
+                        <span class="date">${item.date || new Date(item.publishedAt || Date.now()).toLocaleDateString()}</span>
+                        <a href="${escapeAttribute(item.url)}" class="watch-btn" target="_blank" rel="noopener noreferrer">Watch</a>
+                    </div>
+                </div>
+            `;
+        }
+        
+        container.appendChild(card);
+        
+        if (item.type === 'short') {
+            const watchBtn = card.querySelector('.watch-btn');
+            if (watchBtn) {
+                watchBtn.textContent = '📱 Watch Short';
+                watchBtn.target = '_blank';
+                watchBtn.rel = 'noopener noreferrer';
+            }
+        }
+    });
+    
+    if (currentPage < totalPages) {
+        const loadMoreWrapper = document.createElement('div');
+        loadMoreWrapper.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 20px 0;';
+        
+        const loadMoreBtn = document.createElement('button');
+        loadMoreBtn.textContent = `📥 Load More (${currentPage} / ${totalPages})`;
+        loadMoreBtn.style.cssText = `
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.2s;
+        `;
+        loadMoreBtn.addEventListener('mouseover', () => {
+            loadMoreBtn.style.background = '#cc0000';
+        });
+        loadMoreBtn.addEventListener('mouseout', () => {
+            loadMoreBtn.style.background = '#ff0000';
+        });
+        
+        loadMoreBtn.addEventListener('click', function() {
+            currentPage++;
+            renderPage(filteredItems, type);
+            const grid = document.getElementById('youtubeContentGrid') || contentGrid;
+            if (grid) {
+                grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+        
+        loadMoreWrapper.appendChild(loadMoreBtn);
+        container.appendChild(loadMoreWrapper);
+    }
+}
+
+// ==========================================
+// HELPERS
 // ==========================================
 
 function getContentIcon(type) {
-    switch (type) {
-        case "video":
-            return "🎬";
+    const icons = { video: '🎬', short: '📱', live: '🔴', post: '📝' };
+    return icons[type] || '🎮';
+}
 
-        case "short":
-            return "📱";
+function getYouTubeThumbnail(url) {
+    const videoId = getYouTubeVideoId(url);
+    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
+}
 
-        case "live":
-            return "🔴";
+function getYouTubeVideoId(url) {
+    try {
+        const parsed = new URL(url);
+        if (parsed.hostname.includes('youtube.com')) {
+            if (parsed.searchParams.get('v')) return parsed.searchParams.get('v');
+            if (parsed.pathname.startsWith('/shorts/')) return parsed.pathname.split('/shorts/')[1].split('/')[0];
+            if (parsed.pathname.startsWith('/live/')) return parsed.pathname.split('/live/')[1].split('/')[0];
+        }
+        if (parsed.hostname === 'youtu.be') return parsed.pathname.substring(1).split('/')[0];
+    } catch {}
+    return null;
+}
 
-        case "post":
-            return "📝";
+function escapeHTML(text) {
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
 
-        default:
-            return "🎮";
+function escapeAttribute(text) {
+    return String(text).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ==========================================
+// UPDATE STATISTICS
+// ==========================================
+
+function updateStatistics() {
+    let videos = 0, shorts = 0, live = 0, posts = 0;
+    
+    allYouTubeVideos.forEach(v => {
+        if (v.type === 'video') videos++;
+        else if (v.type === 'short') shorts++;
+        else if (v.type === 'live') live++;
+    });
+    
+    allYouTubePosts.forEach(() => posts++);
+    
+    contentData.forEach(v => {
+        if (v.type === 'video') videos++;
+        else if (v.type === 'short') shorts++;
+        else if (v.type === 'live') live++;
+        else if (v.type === 'post') posts++;
+    });
+    
+    const numbers = document.querySelectorAll('.stat-number');
+    if (numbers.length >= 4) {
+        numbers[0].textContent = videos;
+        numbers[1].textContent = shorts;
+        numbers[2].textContent = live;
+        numbers[3].textContent = posts;
     }
 }
 
 // ==========================================
-// CREATE CONTENT CARD
+// UPDATE FEATURED VIDEO
 // ==========================================
 
-function createContentCard(content) {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const thumbnail = getYouTubeThumbnail(content.url);
-    const icon = getContentIcon(content.type);
-
-    card.innerHTML = `
-        <div class="thumbnail">
-
-            ${
-                thumbnail
-                    ? `
-                        <img
-                            src="${escapeAttribute(thumbnail)}"
-                            alt="YouTube thumbnail"
-                            class="youtube-thumbnail"
-                        >
-                    `
-                    : `
-                        <span class="thumbnail-icon">
-                            ${icon}
-                        </span>
-                    `
-            }
-
-        </div>
-
-        <div class="card-content">
-
-            <span class="content-type">
-                ${escapeHTML(content.type.toUpperCase())}
-            </span>
-
-            <h3>
-                ${escapeHTML(content.title)}
-            </h3>
-
-            <p>
-                ${escapeHTML(content.description || "")}
-            </p>
-
-            ${
-                content.category
-                    ? `
-                        <p>
-                            🏷️ ${escapeHTML(content.category)}
-                        </p>
-                    `
-                    : ""
-            }
-
-            <div class="card-footer">
-
-                <span class="date">
-                    ${escapeHTML(content.date || "")}
-                </span>
-
-                <a
-                    href="${escapeAttribute(content.url)}"
-                    class="watch-btn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Watch
-                </a>
-
-            </div>
-
-           ${content.isAuto ? "" : `
-<div class="management-buttons">
-    <button type="button" class="edit-btn" data-id="${content.id}">
-        ✏️ Edit
-    </button>
-
-    <button type="button" class="delete-btn" data-id="${content.id}">
-        🗑️ Delete
-    </button>
-</div>
-`}
-
-        </div>
-    `;
-
-    return card;
+function updateFeaturedVideo() {
+    let featured = allYouTubeVideos.find(v => v.type === 'video');
+    if (!featured) featured = contentData.find(v => v.type === 'video');
+    
+    const thumbnail = document.getElementById('featuredThumbnail');
+    const title = document.getElementById('featuredTitle');
+    const description = document.getElementById('featuredDescription');
+    const date = document.getElementById('featuredDate');
+    const watch = document.getElementById('featuredWatch');
+    
+    if (!thumbnail || !title || !description || !date || !watch) return;
+    
+    if (!featured) {
+        thumbnail.innerHTML = '<span class="featured-placeholder">🎬</span>';
+        title.textContent = 'No featured video yet';
+        description.textContent = 'Add your first YouTube video and it will appear here automatically.';
+        date.textContent = '—';
+        watch.href = '#';
+        return;
+    }
+    
+    const thumb = featured.thumbnail || getYouTubeThumbnail(featured.url);
+    thumbnail.innerHTML = thumb ? `<img src="${thumb}" alt="Featured Video">` : '<span class="featured-placeholder">🎬</span>';
+    title.textContent = featured.title;
+    description.textContent = featured.description || 'Latest upload from BS Gamer_z.';
+    date.textContent = featured.date || new Date(featured.publishedAt || Date.now()).toLocaleDateString();
+    watch.href = featured.url || `https://www.youtube.com/watch?v=${featured.id}`;
 }
 
 // ==========================================
-// CREATOR DASHBOARD
-// ==========================================
-
-const dashboardButton =
-    document.getElementById("dashboardButton");
-
-const dashboardPanel =
-    document.getElementById("dashboardPanel");
-
-const closeDashboard =
-    document.getElementById("closeDashboard");
-
-if (dashboardButton && dashboardPanel) {
-
-    dashboardButton.addEventListener("click", function () {
-
-        updateDashboard();
-
-        dashboardPanel.classList.add("show");
-
-    });
-
-}
-
-if (closeDashboard && dashboardPanel) {
-
-    closeDashboard.addEventListener("click", function () {
-
-        dashboardPanel.classList.remove("show");
-
-    });
-
-}
-
-
-// ==========================================
-// UPDATE DASHBOARD
+// DASHBOARD
 // ==========================================
 
 function updateDashboard() {
-
-    const videos =
-        contentData.filter(item => item.type === "video").length;
-
-    const shorts =
-        contentData.filter(item => item.type === "short").length;
-
-    const live =
-        contentData.filter(item => item.type === "live").length;
-
-    const posts =
-        contentData.filter(item => item.type === "post").length;
-
-    const visits =
-        Number(localStorage.getItem("bs_website_visits")) || 0;
-
-    const latestVideo =
-        contentData.find(item => item.type === "video");
-
-
-    setDashValue("dashVideos", videos);
-
-    setDashValue("dashShorts", shorts);
-
-    setDashValue("dashLive", live);
-
-    setDashValue("dashPosts", posts);
-
-    setDashValue("dashVisits", visits.toLocaleString());
-
-
-    const latestTitle =
-        document.getElementById("dashboardLatestTitle");
-
-    if (latestTitle) {
-
-        latestTitle.textContent =
-            latestVideo
-                ? latestVideo.title
-                : "No videos yet";
-
-    }
-
+    const videos = allYouTubeVideos.filter(v => v.type === 'video').length + contentData.filter(v => v.type === 'video').length;
+    const shorts = allYouTubeVideos.filter(v => v.type === 'short').length + contentData.filter(v => v.type === 'short').length;
+    const live = allYouTubeVideos.filter(v => v.type === 'live').length + contentData.filter(v => v.type === 'live').length;
+    const posts = allYouTubePosts.length + contentData.filter(v => v.type === 'post').length;
+    const visits = Number(localStorage.getItem('bs_website_visits')) || 0;
+    const latestVideo = allYouTubeVideos.find(v => v.type === 'video') || contentData.find(v => v.type === 'video');
+    
+    document.getElementById('dashVideos').textContent = videos;
+    document.getElementById('dashShorts').textContent = shorts;
+    document.getElementById('dashLive').textContent = live;
+    document.getElementById('dashPosts').textContent = posts;
+    document.getElementById('dashVisits').textContent = visits.toLocaleString();
+    document.getElementById('dashboardLatestTitle').textContent = latestVideo ? latestVideo.title : 'No videos yet';
 }
 
-
 // ==========================================
-// DASHBOARD HELPER
-// ==========================================
-
-function setDashValue(id, value) {
-
-    const element =
-        document.getElementById(id);
-
-    if (element) {
-
-        element.textContent = value;
-
-    }
-
-}
-// ==========================================
-// SHARE WEBSITE
+// CATEGORY BUTTONS (FIXED)
 // ==========================================
 
-const shareButton =
-    document.getElementById("shareWebsite");
-
-if (shareButton) {
-
-    shareButton.addEventListener("click", async function () {
-
-        const shareData = {
-
-            title: "BS Gamer_z",
-
-            text: "Check out BS Gamer_z for gaming videos, Shorts, live streams, and more!",
-
-            url: window.location.origin
-
-        };
-
-        try {
-
-            if (navigator.share) {
-
-                await navigator.share(shareData);
-
-            } else {
-
-                await navigator.clipboard.writeText(shareData.url);
-
-                alert("Website link copied to clipboard! 🔗");
-
-            }
-
-        } catch (error) {
-
-            console.log("Share cancelled.");
-
-        }
-
+categoryButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        categoryButtons.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const category = this.dataset.category;
+        renderContent(category);
     });
-
-}
-
-// ==========================================
-// RENDER CONTENT
-// ==========================================
-
-function renderContent() {
-
-    if (!contentGrid) {
-        return;
-    }
-     updateDashboard();
-    updateDashboard();
-// updateFeaturedVideo();
-    contentGrid.innerHTML = "";
-
-    if (contentData.length === 0) {
-
-        contentGrid.innerHTML = `
-            <div class="card">
-
-                <div class="thumbnail">
-                    🎮
-                </div>
-
-                <div class="card-content">
-
-                    <span class="content-type">
-                        INFO
-                    </span>
-
-                    <h3>
-                        No content added yet
-                    </h3>
-
-                    <p>
-                        Click "+ Add Content"
-                        to add your first content.
-                    </p>
-
-                </div>
-
-            </div>
-        `;
-
-        updateStatistics();
-        return;
-    }
-
-    contentData.forEach(function(content) {
-
-        contentGrid.appendChild(
-            createContentCard(content)
-        );
-
-    });
-
-    updateStatistics();
-    filterContent();
-}
-
-// ==========================================
-// PWA SERVICE WORKER
-// ==========================================
-
-if ("serviceWorker" in navigator) {
-
-    window.addEventListener("load", function () {
-
-        navigator.serviceWorker.register("./sw.js")
-
-            .then(function () {
-
-                console.log("Service Worker registered ✅");
-
-            })
-
-            .catch(function (error) {
-
-                console.error("Service Worker failed:", error);
-
-            });
-
-    });
-
-}
+});
 
 // ==========================================
 // SEARCH
 // ==========================================
 
+function filterContent() {
+    const searchText = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    const activeButton = document.querySelector('.category.active');
+    const category = activeButton ? activeButton.dataset.category : 'all';
+    
+    currentPage = 1;
+    renderContent(category);
+    
+    setTimeout(() => {
+        const cards = contentGrid.querySelectorAll('.card');
+        cards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(searchText) ? '' : 'none';
+        });
+    }, 100);
+}
+
 if (searchInput) {
-
-    searchInput.addEventListener(
-        "input",
-        filterContent
-    );
-
+    searchInput.addEventListener('input', filterContent);
 }
 
 // ==========================================
-// CATEGORY FILTER
+// ADD / EDIT / DELETE CONTENT (Manual)
 // ==========================================
 
-categoryButtons.forEach(function(button) {
-
-    button.addEventListener(
-        "click",
-        function() {
-
-            categoryButtons.forEach(
-                function(btn) {
-                    btn.classList.remove("active");
-                }
-            );
-
-            button.classList.add("active");
-
-            filterContent();
-        }
-    );
-
-});
-
-// ==========================================
-// FILTER CONTENT
-// ==========================================
-
-function filterContent() {
-
-    if (!contentGrid) {
-        return;
-    }
-
-    const searchText = searchInput
-        ? searchInput.value.toLowerCase().trim()
-        : "";
-
-    const activeButton =
-        document.querySelector(".category.active");
-
-    let selectedCategory = "all";
-
-    if (activeButton) {
-        selectedCategory = activeButton.textContent
-            .toLowerCase()
-            .trim();
-    }
-
-    const cards =
-        contentGrid.querySelectorAll(".card");
-
-    cards.forEach(function(card) {
-
-        const typeElement =
-            card.querySelector(".content-type");
-
-        if (!typeElement) {
-            return;
-        }
-
-        const type =
-            typeElement.textContent
-                .toLowerCase()
-                .trim();
-
-        const cardText =
-            card.textContent.toLowerCase();
-
-        let categoryMatches = false;
-
-        if (selectedCategory === "all") {
-            categoryMatches = true;
-        }
-        else if (
-            selectedCategory.includes("video") &&
-            type === "video"
-        ) {
-            categoryMatches = true;
-        }
-        else if (
-            selectedCategory.includes("short") &&
-            type === "short"
-        ) {
-            categoryMatches = true;
-        }
-        else if (
-            selectedCategory.includes("live") &&
-            type === "live"
-        ) {
-            categoryMatches = true;
-        }
-        else if (
-            selectedCategory.includes("post") &&
-            type === "post"
-        ) {
-            categoryMatches = true;
-        }
-
-        const searchMatches =
-            cardText.includes(searchText);
-
-        if (
-            categoryMatches &&
-            searchMatches
-        ) {
-            card.style.display = "";
-        }
-        else {
-            card.style.display = "none";
-        }
-
+if (addContentButton && addContentForm) {
+    addContentButton.addEventListener('click', function() {
+        editingId = null;
+        contentForm.reset();
+        updateFormTitle();
+        addContentForm.classList.add('show');
+        addContentForm.scrollIntoView({ behavior: 'smooth' });
     });
 }
 
-// ==========================================
-// OPEN ADD CONTENT FORM
-// ==========================================
-
-if (
-    addContentButton &&
-    addContentForm &&
-    contentForm
-) {
-
-    addContentButton.addEventListener(
-        "click",
-        function() {
-
-            editingId = null;
-
-            contentForm.reset();
-
-            updateFormTitle();
-
-            addContentForm.classList.add("show");
-
-            addContentForm.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-        }
-    );
-
-}
-
-// ==========================================
-// CANCEL FORM
-// ==========================================
-
-if (
-    cancelContentButton &&
-    addContentForm &&
-    contentForm
-) {
-
-    cancelContentButton.addEventListener(
-        "click",
-        closeForm
-    );
-
+if (cancelContentButton && addContentForm) {
+    cancelContentButton.addEventListener('click', closeForm);
 }
 
 function closeForm() {
-
-    if (!contentForm || !addContentForm) {
-        return;
-    }
-
     editingId = null;
-
     contentForm.reset();
-
-    addContentForm.classList.remove("show");
-
+    addContentForm.classList.remove('show');
     updateFormTitle();
 }
-
-// ==========================================
-// FORM TITLE
-// ==========================================
 
 function updateFormTitle() {
-
-    if (!addContentForm) {
-        return;
-    }
-
-    const title =
-        addContentForm.querySelector("h2");
-
-    if (!title) {
-        return;
-    }
-
-    if (editingId !== null) {
-        title.textContent = "Edit Content";
-    }
-    else {
-        title.textContent = "Add New Content";
+    const title = addContentForm.querySelector('h2');
+    if (title) {
+        title.textContent = editingId !== null ? 'Edit Content' : 'Add New Content';
     }
 }
-
-// ==========================================
-// ADD / EDIT CONTENT
-// ==========================================
 
 if (contentForm) {
-
-    contentForm.addEventListener(
-        "submit",
-        function(event) {
-
-            event.preventDefault();
-
-            const type =
-                document.querySelector("#contentType")?.value || "";
-
-            const title =
-                document.querySelector("#contentTitle")?.value.trim() || "";
-
-            const url =
-                document.querySelector("#contentUrl")?.value.trim() || "";
-
-            const description =
-                document.querySelector("#contentDescription")?.value.trim() || "";
-
-            const category =
-                document.querySelector("#contentCategory")?.value.trim() || "";
-
-            const date =
-                document.querySelector("#contentDate")?.value || "";
-
-            if (!title) {
-                alert("Please enter a title.");
-                return;
-            }
-
-            if (!url) {
-                alert("Please enter a YouTube link.");
-                return;
-            }
-
-            // ==================================
-            // EDIT EXISTING CONTENT
-            // ==================================
-
-            if (editingId !== null) {
-
-                const index =
-                    contentData.findIndex(
-                        function(item) {
-                            return item.id === editingId;
-                        }
-                    );
-
-                if (index !== -1) {
-
-                    contentData[index] = {
-                        ...contentData[index],
-
-                        type: type,
-                        title: title,
-                        url: url,
-                        description: description,
-                        category: category,
-                        date: date
-                    };
-
-                }
-
-                saveContent();
-                renderContent();
-                closeForm();
-
-                alert(
-                    "Content updated successfully! ✅"
-                );
-
-                return;
-            }
-
-            // ==================================
-            // ADD NEW CONTENT
-            // ==================================
-
-            const newContent = {
-
-                id: Date.now(),
-
-                type: type,
-
-                title: title,
-
-                url: url,
-
-                description: description,
-
-                category: category,
-
-                date: date
-
-            };
-
-            contentData.unshift(newContent);
-
-            saveContent();
-
-            renderContent();
-
-            closeForm();
-
-            alert(
-                "Content added successfully! 🎉"
-            );
-
-        }
-    );
-
-}
-
-// ==========================================
-// EDIT / DELETE BUTTONS
-// ==========================================
-
-if (contentGrid) {
-
-    contentGrid.addEventListener(
-        "click",
-        function(event) {
-
-            const editButton =
-                event.target.closest(".edit-btn");
-
-            const deleteButton =
-                event.target.closest(".delete-btn");
-
-            if (editButton) {
-
-                editContent(
-                    Number(editButton.dataset.id)
-                );
-
-                return;
-            }
-
-            if (deleteButton) {
-
-                deleteContent(
-                    Number(deleteButton.dataset.id)
-                );
-
-            }
-
-        }
-    );
-
-}
-
-// ==========================================
-// EDIT CONTENT
-// ==========================================
-
-function editContent(id) {
-
-    const content =
-        contentData.find(
-            function(item) {
-                return item.id === id;
-            }
-        );
-
-    if (!content) {
-        return;
-    }
-
-    if (!addContentForm || !contentForm) {
-        return;
-    }
-
-    editingId = id;
-
-    document.querySelector("#contentType").value =
-        content.type;
-
-    document.querySelector("#contentTitle").value =
-        content.title;
-
-    document.querySelector("#contentUrl").value =
-        content.url;
-
-    document.querySelector("#contentDescription").value =
-        content.description || "";
-
-    document.querySelector("#contentCategory").value =
-        content.category || "";
-
-    document.querySelector("#contentDate").value =
-        content.date || "";
-
-    updateFormTitle();
-
-    addContentForm.classList.add("show");
-
-    addContentForm.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
-}
-
-// ==========================================
-// DELETE CONTENT
-// ==========================================
-
-function deleteContent(id) {
-
-    const content =
-        contentData.find(
-            function(item) {
-                return item.id === id;
-            }
-        );
-
-    if (!content) {
-        return;
-    }
-
-    const confirmed =
-        confirm(
-            `Delete "${content.title}"?`
-        );
-
-    if (!confirmed) {
-        return;
-    }
-
-    contentData =
-        contentData.filter(
-            function(item) {
-                return item.id !== id;
-            }
-        );
-
-    saveContent();
-
-    renderContent();
-
-    alert(
-        "Content deleted successfully."
-    );
-}
-
-// ==========================================
-// STATISTICS
-// ==========================================
-
-function updateStatistics() {
-
-    let videos = 0;
-    let shorts = 0;
-    let live = 0;
-    let posts = 0;
-
-    contentData.forEach(
-        function(content) {
-
-            if (content.type === "video") {
-                videos++;
-            }
-            else if (content.type === "short") {
-                shorts++;
-            }
-            else if (content.type === "live") {
-                live++;
-            }
-            else if (content.type === "post") {
-                posts++;
-            }
-
-        }
-    );
-
-    const numbers =
-        document.querySelectorAll(".stat-number");
-
-    if (numbers.length >= 4) {
-
-        numbers[0].textContent = videos;
-        numbers[1].textContent = shorts;
-        numbers[2].textContent = live;
-        numbers[3].textContent = posts;
-
-    }
-}
-
-// ==========================================
-// SECURITY HELPERS
-// ==========================================
-
-function escapeHTML(text) {
-
-    const div =
-        document.createElement("div");
-
-    div.textContent = String(text);
-
-    return div.innerHTML;
-}
-
-function escapeAttribute(text) {
-
-    return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/"/g, "&quot;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-}
-
-// ==========================================
-// FEATURED VIDEO
-// ==========================================
-
-function updateFeaturedVideo() {
-
-    const featured =
-        contentData.find(function(item){
-
-            return item.type === "video";
-
-        });
-
-    const thumbnail =
-        document.getElementById("featuredThumbnail");
-
-    const title =
-        document.getElementById("featuredTitle");
-
-    const description =
-        document.getElementById("featuredDescription");
-
-    const date =
-        document.getElementById("featuredDate");
-
-    const watch =
-        document.getElementById("featuredWatch");
-
-    if(
-        !thumbnail ||
-        !title ||
-        !description ||
-        !date ||
-        !watch
-    ){
-        return;
-    }
-
-    if(!featured){
-
-        thumbnail.innerHTML =
-            '<span class="featured-placeholder">🎬</span>';
-
-        title.textContent =
-            "No featured video yet";
-
-        description.textContent =
-            "Add your first YouTube video and it will appear here automatically.";
-
-        date.textContent = "—";
-
-        watch.href = "#";
-
-        return;
-
-    }
-
-    const thumb =
-        getYouTubeThumbnail(featured.url);
-
-    thumbnail.innerHTML = thumb
-        ? `<img src="${thumb}" alt="Featured Video">`
-        : '<span class="featured-placeholder">🎬</span>';
-
-    title.textContent =
-        featured.title;
-
-    description.textContent =
-        featured.description ||
-        "No description available.";
-
-    date.textContent =
-        featured.date ||
-        "Recent upload";
-
-    watch.href =
-        featured.url;
-
-}
-// ==========================================
-// START WEBSITE
-// ==========================================
-
-renderContent();
-
-console.log(
-    "BS Gamer_z website loaded successfully! ✅"
-);
-
-// ==========================================
-// WEBSITE VISITOR COUNTER
-// ==========================================
-
-const visitorElement =
-    document.getElementById("visitorCount");
-
-if(visitorElement){
-
-    let visits =
-        Number(
-            localStorage.getItem("bs_website_visits")
-        ) || 0;
-
-    visits++;
-
-    localStorage.setItem(
-        "bs_website_visits",
-        visits
-    );
-
-    visitorElement.textContent =
-        visits.toLocaleString();
-
-}
-
-// ==========================================
-// SCROLL TO TOP BUTTON
-// ==========================================
-
-const scrollTopBtn =
-    document.getElementById("scrollTopBtn");
-
-window.addEventListener("scroll", function(){
-
-    if(window.scrollY > 300){
-
-        scrollTopBtn.classList.add("show");
-
-    }else{
-
-        scrollTopBtn.classList.remove("show");
-
-    }
-
-});
-
-scrollTopBtn.addEventListener("click", function(){
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-    });
-
-});
-
-// ==========================================
-// TOP NAVIGATION
-// ==========================================
-
-const navButtons = document.querySelectorAll(".nav-btn");
-
-navButtons.forEach(function(button) {
-
-    button.addEventListener("click", function() {
-
-        const page = button.textContent
-            .toLowerCase()
-            .trim();
-
-        // Remove active from all navigation buttons
-        navButtons.forEach(function(btn) {
-
-            btn.classList.remove("active");
-
-        });
-
-        // Add active to clicked button
-        button.classList.add("active");
-
-
-        // Home
-        if (page === "home") {
-
-            if (searchInput) {
-                searchInput.value = "";
-            }
-
-            categoryButtons.forEach(function(btn) {
-
-                btn.classList.remove("active");
-
-            });
-
-            const allButton =
-                document.querySelector(
-                    '.category[data-category="all"]'
-                );
-
-            if (allButton) {
-
-                allButton.classList.add("active");
-
-            }
-
-            renderContent();
-
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-
+    contentForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const type = document.querySelector('#contentType')?.value || '';
+        const title = document.querySelector('#contentTitle')?.value.trim() || '';
+        const url = document.querySelector('#contentUrl')?.value.trim() || '';
+        const description = document.querySelector('#contentDescription')?.value.trim() || '';
+        const category = document.querySelector('#contentCategory')?.value.trim() || '';
+        const date = document.querySelector('#contentDate')?.value || '';
+        
+        if (!title || !url) {
+            alert('Please enter a title and YouTube link.');
             return;
         }
-
-
-        // Videos
-        if (page === "videos") {
-
-            selectCategoryFromNavigation("video");
-
+        
+        if (editingId !== null) {
+            const index = contentData.findIndex(item => item.id === editingId);
+            if (index !== -1) {
+                contentData[index] = { ...contentData[index], type, title, url, description, category, date };
+            }
+            saveContent();
+            renderContent(document.querySelector('.category.active')?.dataset.category || 'all');
+            closeForm();
+            alert('Content updated successfully! ✅');
+            return;
         }
-
-
-        // Shorts
-        else if (page === "shorts") {
-
-            selectCategoryFromNavigation("short");
-
-        }
-
-
-        // Live
-        else if (page === "live") {
-
-            selectCategoryFromNavigation("live");
-
-        }
-
-
-        // Posts
-        else if (page === "posts") {
-
-            selectCategoryFromNavigation("post");
-
-        }
-
-    });
-
-});
-
-
-// ==========================================
-// SELECT CATEGORY FROM TOP NAVIGATION
-// ==========================================
-
-function selectCategoryFromNavigation(category) {
-
-    const categoryButton =
-        document.querySelector(
-            '.category[data-category="' +
-            category +
-            '"]'
-        );
-
-
-    if (!categoryButton) {
-
-        return;
-
-    }
-
-
-    // Remove active from all categories
-
-    categoryButtons.forEach(function(button) {
-
-        button.classList.remove("active");
-
-    });
-
-
-    // Activate selected category
-
-    categoryButton.classList.add("active");
-
-
-    // Clear search
-
-    if (searchInput) {
-
-        searchInput.value = "";
-
-    }
-
-
-    // Apply filter
-
-    filterContent();
-
-
-    // Scroll to content
-
-    const contentSection =
-        document.querySelector(".content-grid");
-
-
-    if (contentSection) {
-
-        contentSection.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
+        
+        contentData.unshift({
+            id: Date.now(),
+            type, title, url, description, category, date
         });
-
-    }
-
-}
-// ==========================================
-// SAFE NAVIGATION
-// ==========================================
-
-document.querySelectorAll(".nav-btn[data-nav]").forEach(function(btn){
-
-    btn.addEventListener("click", function(){
-
-        document.querySelectorAll(".nav-btn[data-nav]").forEach(function(b){
-            b.classList.remove("active");
-        });
-
-        btn.classList.add("active");
-
-        const target = btn.dataset.nav;
-
-        const categoryBtn = document.querySelector(
-            '.category[data-category="' +
-            (target === "home" ? "all" : target) +
-            '"]'
-        );
-
-        if (categoryBtn) {
-            categoryBtn.click();
-        }
-
-    });
-
-});
-async function loadLatestYouTubeVideos() {
-    try {
-        const response = await fetch("data/youtube.json");
-        const videos = await response.json();
-
-        if (!videos.length) return;
-
-        const latest = videos[0];
-
-        // Featured thumbnail
-        const thumbnail = document.getElementById("featuredThumbnail");
-        thumbnail.innerHTML = `
-            <img src="${latest.thumbnail}" alt="${latest.title}">
-        `;
-
-        // Featured title
-        document.getElementById("featuredTitle").textContent = latest.title;
-
-        // Description
-        document.getElementById("featuredDescription").textContent =
-            "Latest upload from BS Gamer_z.";
-
-        // Upload date
-        document.getElementById("featuredDate").textContent =
-            new Date(latest.published).toLocaleDateString();
-
-        // Watch button
-        document.getElementById("featuredWatch").href = latest.url;
-
-    } catch (err) {
-        console.error("Failed to load YouTube data:", err);
-    }
-}
-
-loadLatestYouTubeVideos();
-async function loadYouTubeGallery() {
-    try {
-        const response = await fetch("data/youtube.json");
-        const videos = await response.json();
-
-        if (!videos.length) return;
-
-        // Convert YouTube videos into your website format
-        const youtubeContent = videos.map(video => ({
-            id: "yt_" + video.videoId,
-            type: video.type,
-            title: video.title,
-            description: "Latest upload from BS Gamer_z",
-            url: video.url,
-            category: "YouTube",
-            date: new Date(video.published).toISOString().split("T")[0],
-            isAuto: true
-        }));
-
-        // Keep manual content
-        const manualContent = contentData.filter(item => !item.isAuto);
-
-        // Merge auto + manual
-        contentData = [...youtubeContent, ...manualContent];
-
-        // Save using your existing storage key
         saveContent();
-
-        // Refresh website
-        renderContent();
-
-    } catch (error) {
-        console.error("YouTube sync error:", error);
-    }
+        renderContent(document.querySelector('.category.active')?.dataset.category || 'all');
+        closeForm();
+        alert('Content added successfully! 🎉');
+    });
 }
-loadLatestYouTubeVideos();
-loadYouTubeGallery();
+
+if (contentGrid) {
+    contentGrid.addEventListener('click', function(event) {
+        const editBtn = event.target.closest('.edit-btn');
+        const deleteBtn = event.target.closest('.delete-btn');
+        
+        if (editBtn) editContent(Number(editBtn.dataset.id));
+        if (deleteBtn) deleteContent(Number(deleteBtn.dataset.id));
+    });
+}
+
+function editContent(id) {
+    const content = contentData.find(item => item.id === id);
+    if (!content || !addContentForm || !contentForm) return;
+    
+    editingId = id;
+    document.querySelector('#contentType').value = content.type;
+    document.querySelector('#contentTitle').value = content.title;
+    document.querySelector('#contentUrl').value = content.url;
+    document.querySelector('#contentDescription').value = content.description || '';
+    document.querySelector('#contentCategory').value = content.category || '';
+    document.querySelector('#contentDate').value = content.date || '';
+    
+    updateFormTitle();
+    addContentForm.classList.add('show');
+    addContentForm.scrollIntoView({ behavior: 'smooth' });
+}
+
+function deleteContent(id) {
+    const content = contentData.find(item => item.id === id);
+    if (!content) return;
+    if (!confirm(`Delete "${content.title}"?`)) return;
+    
+    contentData = contentData.filter(item => item.id !== id);
+    saveContent();
+    renderContent(document.querySelector('.category.active')?.dataset.category || 'all');
+    alert('Content deleted successfully.');
+}
+
+// ==========================================
+// NAVIGATION
+// ==========================================
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const page = this.textContent.toLowerCase().trim();
+        const categoryMap = { home: 'all', videos: 'video', shorts: 'short', live: 'live', posts: 'post' };
+        const category = categoryMap[page] || 'all';
+        const categoryBtn = document.querySelector(`.category[data-category="${category}"]`);
+        if (categoryBtn) categoryBtn.click();
+    });
+});
+
+// ==========================================
+// SHARE BUTTON
+// ==========================================
+
+const shareButton = document.getElementById('shareWebsite');
+if (shareButton) {
+    shareButton.addEventListener('click', async function() {
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: 'BS Gamer_z',
+                    text: 'Check out BS Gamer_z for gaming videos, Shorts, live streams, and more!',
+                    url: window.location.origin
+                });
+            } else {
+                await navigator.clipboard.writeText(window.location.origin);
+                alert('Website link copied to clipboard! 🔗');
+            }
+        } catch {}
+    });
+}
+
+// ==========================================
+// SCROLL TO TOP
+// ==========================================
+
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('show', window.scrollY > 300);
+});
+scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ==========================================
+// DASHBOARD
+// ==========================================
+
+document.getElementById('dashboardButton').addEventListener('click', () => {
+    updateDashboard();
+    document.getElementById('dashboardPanel').classList.add('show');
+});
+document.getElementById('closeDashboard').addEventListener('click', () => {
+    document.getElementById('dashboardPanel').classList.remove('show');
+});
+
+// ==========================================
+// VISITOR COUNTER
+// ==========================================
+
+const visitorElement = document.getElementById('visitorCount');
+if (visitorElement) {
+    let visits = Number(localStorage.getItem('bs_website_visits')) || 0;
+    visits++;
+    localStorage.setItem('bs_website_visits', visits);
+    visitorElement.textContent = visits.toLocaleString();
+}
+
+// ==========================================
+// SHOW SKELETON LOADING CARDS
+// ==========================================
+
+function showSkeletons(container) {
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    // Create skeleton wrapper
+    const wrapper = document.createElement('div');
+    wrapper.className = 'skeleton-wrapper';
+    
+    // Generate 6 skeleton cards
+    for (let i = 0; i < 6; i++) {
+        const card = document.createElement('div');
+        card.className = 'skeleton-card';
+        card.innerHTML = `
+            <div class="skeleton-thumbnail"></div>
+            <div class="skeleton-content">
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line long"></div>
+                <div class="skeleton-line medium"></div>
+                <div class="skeleton-line short" style="margin-bottom:0;"></div>
+            </div>
+        `;
+        wrapper.appendChild(card);
+    }
+    
+    container.appendChild(wrapper);
+}
+// ==========================================
+// INITIALIZE
+// ==========================================
+
+loadYouTubeData();
+renderContent('all');
+
+console.log('BS Gamer_z website loaded successfully! ✅');

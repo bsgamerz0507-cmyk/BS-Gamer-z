@@ -304,38 +304,69 @@ nav {
     gap: 22px;
 }
 
-
 /* ==========================================
-   CONTENT CARD
+   CONTENT CARD - PREMIUM 3D LOOK
    ========================================== */
 
 .card {
-    background: #181818;
+    background: #1e1e1e;          /* Slightly lighter than background */
     border: 1px solid #333333;
-    border-radius: 12px;
+    border-radius: 16px;           /* More rounded */
     overflow: hidden;
-    transition: transform 0.2s, border-color 0.2s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+    
+    /* Default shadow to lift it off the dark background */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    
+    /* Make the card stand out with a slight inner glow */
+    position: relative;
+}
+
+/* Add a subtle glowing border instead of flat */
+.card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,0,0,0.05));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    border-color: #555555;
+    transform: translateY(-10px);
+    border-color: #ff0000;
+    
+    /* Deeper, glowing shadow on hover */
+    box-shadow: 0 16px 48px rgba(255, 0, 0, 0.15), 
+                0 10px 30px rgba(0, 0, 0, 0.8);
+    
+    background: #222222; /* Slightly brighter on hover */
 }
+
+/* ==========================================
+   THUMBNAIL INSIDE CARD
+   ========================================== */
 
 .thumbnail {
     width: 100%;
-    height: 180px;
-    background: #272727;
+    height: 200px;
+    background: #2a2a2a;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 45px;
+    border-bottom: 1px solid #333333;
 }
 
 .youtube-thumbnail {
     width: 100%;
     height: 100%;
-    min-height: 180px;
+    min-height: 200px;
     object-fit: cover;
     display: block;
 }
@@ -344,30 +375,41 @@ nav {
     font-size: 60px;
 }
 
+/* ==========================================
+   CARD CONTENT AREA
+   ========================================== */
+
 .card-content {
-    padding: 17px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .content-type {
     display: inline-block;
-    background: #272727;
+    background: #2a2a2a;
     color: #cccccc;
-    padding: 5px 9px;
-    border-radius: 4px;
+    padding: 4px 10px;
+    border-radius: 6px;
     font-size: 11px;
-    margin-bottom: 10px;
+    font-weight: bold;
+    width: fit-content;
+    margin-bottom: 4px;
 }
 
 .card h3 {
     font-size: 18px;
-    margin-bottom: 8px;
+    margin: 0;
+    line-height: 1.4;
+    color: #ffffff;
 }
 
 .card p {
-    color: #999999;
+    color: #aaaaaa;
     font-size: 14px;
     line-height: 1.5;
-    margin-bottom: 15px;
+    margin: 4px 0;
 }
 
 .card-footer {
@@ -375,6 +417,9 @@ nav {
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #2a2a2a;
 }
 
 .watch-btn {
@@ -382,9 +427,11 @@ nav {
     background: #ff0000;
     color: #ffffff;
     text-decoration: none;
-    padding: 9px 14px;
-    border-radius: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
     font-size: 13px;
+    font-weight: bold;
+    transition: background 0.2s ease;
 }
 
 .watch-btn:hover {
@@ -396,6 +443,56 @@ nav {
     font-size: 12px;
 }
 
+/* ==========================================
+   LIGHT THEME CARDS
+   ========================================== */
+
+html.light-theme .card {
+    background: #ffffff;
+    border-color: #dddddd;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+html.light-theme .card::before {
+    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,0,0,0.05));
+}
+
+html.light-theme .card:hover {
+    background: #fafafa;
+    border-color: #ff0000;
+    box-shadow: 0 16px 48px rgba(255, 0, 0, 0.12),
+                0 10px 30px rgba(0, 0, 0, 0.10);
+}
+
+html.light-theme .thumbnail {
+    background: #f0f0f0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+html.light-theme .card-content {
+    background: #ffffff;
+}
+
+html.light-theme .content-type {
+    background: #f0f0f0;
+    color: #444;
+}
+
+html.light-theme .card h3 {
+    color: #222;
+}
+
+html.light-theme .card p {
+    color: #555;
+}
+
+html.light-theme .card-footer {
+    border-top-color: #e0e0e0;
+}
+
+html.light-theme .date {
+    color: #777;
+}
 
 /* ==========================================
    ADD CONTENT BUTTON
@@ -2078,4 +2175,157 @@ html.light-theme #contactPageInfo a{
     height:100%;
     object-fit:cover;
     display:block;
+}
+/* ==========================================
+   CATEGORY ICON ON THUMBNAIL
+   ========================================== */
+
+.thumbnail {
+    position: relative;
+}
+
+.category-icon {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Light theme */
+html.light-theme .category-icon {
+    background: rgba(255, 255, 255, 0.85);
+    color: #222;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+/* ==========================================
+   TYPE BADGE ON THUMBNAIL (BOTTOM-LEFT)
+   ========================================== */
+
+.type-badge {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ffffff;
+    z-index: 2;
+    pointer-events: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Different colors for each type */
+.type-badge.video {
+    background: #2ea043; /* Green */
+}
+
+.type-badge.short {
+    background: #1d9bf0; /* Blue */
+}
+
+.type-badge.live {
+    background: #ff0000; /* Red */
+}
+
+.type-badge.post {
+    background: #a970ff; /* Purple */
+}
+
+/* Light theme adjustments */
+html.light-theme .type-badge {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+/* ==========================================
+   SKELETON LOADING ANIMATION
+   ========================================== */
+
+.skeleton-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    width: 100%;
+}
+
+.skeleton-card {
+    background: #1a1a1a;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-thumbnail {
+    width: 100%;
+    height: 200px;
+    background: #2a2a2a;
+}
+
+.skeleton-content {
+    padding: 20px;
+}
+
+.skeleton-line {
+    height: 14px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.skeleton-line.short {
+    width: 60%;
+}
+
+.skeleton-line.medium {
+    width: 80%;
+}
+
+.skeleton-line.long {
+    width: 100%;
+}
+
+/* Pulsing animation */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 0.3; }
+    100% { opacity: 0.6; }
+}
+
+/* Light theme skeletons */
+html.light-theme .skeleton-card {
+    background: #f0f0f0;
+    border-color: #e0e0e0;
+}
+
+html.light-theme .skeleton-thumbnail {
+    background: #e0e0e0;
+}
+
+html.light-theme .skeleton-line {
+    background: #e0e0e0;
+}
+
+/* Responsive skeleton */
+@media (max-width: 900px) {
+    .skeleton-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .skeleton-wrapper {
+        grid-template-columns: 1fr;
+    }
 }
