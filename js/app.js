@@ -56,7 +56,7 @@ async function loadYouTubeData() {
     showSkeletons(container);
     
     try {
-        const response = await fetch('data/youtube.json');
+        /const response = await fetch('/BS-Gamer-z/data/youtube.json');
         const data = await response.json();
         allYouTubeVideos = data.videos || [];
         allYouTubePosts = data.posts || [];
