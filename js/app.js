@@ -345,4 +345,41 @@ if (header) {
     });
 }
 
+// ==========================================
+// SECRET ADMIN MODE (Hides buttons from public)
+// ==========================================
+
+const adminButtons = document.querySelectorAll('.add-content-btn, .dashboard-btn, #dashboardButton, .settings-btn, .share-btn');
+
+// Hide admin buttons by default
+adminButtons.forEach(btn => {
+    if (btn) btn.style.display = 'none';
+});
+
+// Secret code: Type "bsgamerz" in the console to reveal buttons
+console.log('🔒 Admin mode is hidden. Type "bsgamerz" in the console to unlock.');
+
+// Listen for the secret key
+window.addEventListener('keydown', function(e) {
+    // Check if user types "bsgamerz" in the console or presses a secret key combo
+    if (e.key === 'z' && e.ctrlKey && e.shiftKey) {
+        // Ctrl + Shift + Z reveals the buttons
+        adminButtons.forEach(btn => {
+            if (btn) btn.style.display = 'inline-block';
+        });
+        console.log('✅ Admin mode unlocked! Add Content and Dashboard are now visible.');
+        alert('🔓 Admin mode unlocked! You can now use Add Content and Dashboard.');
+    }
+});
+
+// Also allow unlocking via console command
+window.unlockAdmin = function() {
+    adminButtons.forEach(btn => {
+        if (btn) btn.style.display = 'inline-block';
+    });
+    console.log('✅ Admin mode unlocked via console!');
+};
+
+console.log('💡 Tip: You can also type unlockAdmin() in the console to show buttons.');
+
 console.log('BS Gamer_z website loaded successfully! ✅');
