@@ -60,6 +60,26 @@ async function loadYouTubeData() {
         const data = await response.json();
         allYouTubeVideos = data.videos || [];
         allYouTubePosts = data.posts || [];
+        // ==========================================
+// UPDATE LAST SYNCED TIMESTAMP
+// ==========================================
+   // ==========================================
+// UPDATE LAST SYNCED TIMESTAMP (SAFER VERSION)
+// ==========================================
+const lastSyncEl = document.getElementById('lastSyncTime');
+if (lastSyncEl) {
+    if (data.lastUpdated) {
+        const date = new Date(data.lastUpdated);
+        const formatted = date.toLocaleString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric',
+            hour: 'numeric', minute: '2-digit', hour12: true
+        });
+        lastSyncEl.textContent = formatted;
+    } else {
+        // If the field is missing, show a friendly fallback
+        lastSyncEl.textContent = "Not available";
+    }
+}
         checkLiveStreams();
         console.log(`✅ Loaded ${allYouTubeVideos.length} YouTube videos`);
         console.log(`✅ Loaded ${allYouTubePosts.length} community posts`);
@@ -136,6 +156,9 @@ function renderContent(type) {
     
     currentPage = 1;
     renderPage(filtered, type);
+        // ... inside renderContent, after the cards are added
+    initLazyLoading();
+}
 }
 
 // ==========================================
@@ -679,6 +702,56 @@ if (header) {
             header.classList.add('shrink');
         } else {
             header.classList.remove('shrink');
+        }
+    });
+}
+
+// ==========================================
+// LAZY LOAD IMAGES (Intersection Observer)
+// ==========================================
+
+function initLazyLoading() {
+    const images = document.querySelectorAll('.youtube-thumbnail, .card img, .featured-thumbnail img');
+    
+    if (!('IntersectionObserver' in window)) {
+        // If browser doesn't support IntersectionObserver, just load all images
+        images.forEach(img => {
+            img.loading = 'lazy';
+        });
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                // If the image has a data-src, load it
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+                observer.unobserve(img);
+            }
+        });
+    }, {
+        rootMargin: '200px 0px', // Start loading 200px before the image comes into view
+        threshold: 0.01
+    });
+
+    images.forEach(img => {
+        // If the image already has a src, don't lazy load it (it's already loaded)
+        if (!img.src || img.src === '') {
+            // Store the original source in data-src
+            if (img.dataset.src) return;
+            // For images loaded via JS, they'll have a src already
+            return;
+        }
+        
+        // If the image has a src but isn't loaded yet, observe it
+        if (img.src && img.complete === false) {
+            observer.observe(img);
+        } else if (!img.src) {
+            observer.observe(img);
         }
     });
 }
