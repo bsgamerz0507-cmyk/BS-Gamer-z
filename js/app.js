@@ -346,40 +346,44 @@ if (header) {
 }
 
 // ==========================================
-// SECRET ADMIN MODE (Hides buttons from public)
+// SECRET ADMIN MODE (Hides buttons permanently from public)
 // ==========================================
 
 const adminButtons = document.querySelectorAll('.add-content-btn, .dashboard-btn, #dashboardButton, .settings-btn, .share-btn');
 
-// Hide admin buttons by default
-adminButtons.forEach(btn => {
-    if (btn) btn.style.display = 'none';
-});
+// 1. Immediately hide buttons when page loads (even after refresh)
+function hideAdminButtons() {
+    adminButtons.forEach(btn => {
+        if (btn) btn.style.display = 'none';
+    });
+}
 
-// Secret code: Type "bsgamerz" in the console to reveal buttons
-console.log('🔒 Admin mode is hidden. Type "bsgamerz" in the console to unlock.');
+// 2. Show buttons only when secret key is entered
+function showAdminButtons() {
+    adminButtons.forEach(btn => {
+        if (btn) btn.style.display = 'inline-block';
+    });
+    console.log('✅ Admin mode unlocked!');
+}
 
-// Listen for the secret key
-window.addEventListener('keydown', function(e) {
-    // Check if user types "bsgamerz" in the console or presses a secret key combo
-    if (e.key === 'z' && e.ctrlKey && e.shiftKey) {
-        // Ctrl + Shift + Z reveals the buttons
-        adminButtons.forEach(btn => {
-            if (btn) btn.style.display = 'inline-block';
-        });
-        console.log('✅ Admin mode unlocked! Add Content and Dashboard are now visible.');
+// Run the hide function immediately when page loads
+hideAdminButtons();
+
+// 3. Secret key combination to reveal buttons (Only YOU know this)
+document.addEventListener('keydown', function(e) {
+    // Only unlock if user types the exact sequence: Ctrl + Alt + B
+    if (e.ctrlKey && e.altKey && e.key === 'b') {
+        e.preventDefault(); // Prevent browser default action
+        showAdminButtons();
         alert('🔓 Admin mode unlocked! You can now use Add Content and Dashboard.');
     }
 });
 
-// Also allow unlocking via console command
+// 4. Console method (In case you forget the key combo)
 window.unlockAdmin = function() {
-    adminButtons.forEach(btn => {
-        if (btn) btn.style.display = 'inline-block';
-    });
-    console.log('✅ Admin mode unlocked via console!');
+    showAdminButtons();
 };
 
-console.log('💡 Tip: You can also type unlockAdmin() in the console to show buttons.');
-
+console.log('🔒 Admin mode hidden. Press Ctrl + Alt + B to unlock.');
+console.log('💡 Alternatively, type unlockAdmin() in the console.');
 console.log('BS Gamer_z website loaded successfully! ✅');
