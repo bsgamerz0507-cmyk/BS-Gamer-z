@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | BS Gamer_z</title>
+    
+    <!-- Same styles as your main site -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/logo.jpeg" type="image/jpeg">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* Special 404 page styling */
+        .error-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .error-code {
+            font-size: 120px;
+            font-weight: 900;
+            color: #ff0000;
+            text-shadow: 0 0 40px rgba(255, 0, 0, 0.3);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .error-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .error-message {
+            font-size: 18px;
+            color: #aaaaaa;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .error-gif {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .home-btn {
+            display: inline-block;
+            background: #ff0000;
+            color: #ffffff;
+            padding: 14px 35px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.3s ease;
+        }
+
+        .home-btn:hover {
+            background: #cc0000;
+            transform: scale(1.05);
+        }
+
+        /* Light theme support */
+        html.light-theme .error-title {
+            color: #222222;
+        }
+        html.light-theme .error-message {
+            color: #555555;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
+    <header>
+        <div class="logo">
+            <img src="images/logo.jpeg" alt="BS Gamer_z Logo" class="site-logo">
+            <span>BS Gamer_z</span>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         404 ERROR CONTENT
+         ========================================== -->
+    <div class="container error-page">
+        
+        <div class="error-gif">🎮</div>
+        
+        <div class="error-code">404</div>
+        
+        <h1 class="error-title">Oops! You dropped your loot!</h1>
+        
+        <p class="error-message">
+            The page you're looking for doesn't exist or has been moved.<br>
+            Don't worry — the BOOYAH is still waiting for you back home!
+        </p>
+        
+        <a href="/" class="home-btn">
+            <i class="fas fa-home"></i> Return to Home
+        </a>
+        
+    </div>
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 <strong>BS Gamer_z</strong> • Stay gaming, stay grinding!</p>
+        </div>
+    </footer>
+
+</body>
+</html>
