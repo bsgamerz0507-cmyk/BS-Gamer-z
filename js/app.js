@@ -60,6 +60,7 @@ async function loadYouTubeData() {
         const data = await response.json();
         allYouTubeVideos = data.videos || [];
         allYouTubePosts = data.posts || [];
+        checkLiveStreams();
         console.log(`✅ Loaded ${allYouTubeVideos.length} YouTube videos`);
         console.log(`✅ Loaded ${allYouTubePosts.length} community posts`);
         
@@ -86,7 +87,8 @@ function renderContent(type) {
     const container = document.getElementById('youtubeContentGrid') || contentGrid;
     if (!container) return;
     
-    let allContent = [...contentData];
+    // Only use YouTube data (ignore localStorage to prevent duplicates)
+    let allContent = [];
     
     allYouTubeVideos.forEach(video => {
         allContent.push({
@@ -305,27 +307,23 @@ function escapeAttribute(text) {
 }
 
 // ==========================================
-// UPDATE STATISTICS
+// UPDATE STATISTICS (FIXED - NO DOUBLE COUNTING)
 // ==========================================
 
 function updateStatistics() {
     let videos = 0, shorts = 0, live = 0, posts = 0;
     
+    // Only count from YouTube data (ignore localStorage to prevent duplicates)
     allYouTubeVideos.forEach(v => {
         if (v.type === 'video') videos++;
         else if (v.type === 'short') shorts++;
         else if (v.type === 'live') live++;
     });
     
+    // Count posts from YouTube
     allYouTubePosts.forEach(() => posts++);
     
-    contentData.forEach(v => {
-        if (v.type === 'video') videos++;
-        else if (v.type === 'short') shorts++;
-        else if (v.type === 'live') live++;
-        else if (v.type === 'post') posts++;
-    });
-    
+    // Show the numbers
     const numbers = document.querySelectorAll('.stat-number');
     if (numbers.length >= 4) {
         numbers[0].textContent = videos;
@@ -334,7 +332,6 @@ function updateStatistics() {
         numbers[3].textContent = posts;
     }
 }
-
 // ==========================================
 // UPDATE FEATURED VIDEO
 // ==========================================
@@ -646,5 +643,44 @@ function showSkeletons(container) {
 
 loadYouTubeData();
 renderContent('all');
+
+// ==========================================
+// LIVE NOW BANNER LOGIC
+// ==========================================
+
+function checkLiveStreams() {
+    const banner = document.getElementById('liveBanner');
+    const link = document.getElementById('liveBannerLink');
+    
+    if (!banner || !link) return;
+    
+    // Check YouTube videos for any currently live streams
+    const liveStream = allYouTubeVideos.find(v => v.isLive === true);
+    
+    if (liveStream) {
+        // Show banner
+        banner.style.display = 'block';
+        link.href = `https://www.youtube.com/watch?v=${liveStream.id}`;
+    } else {
+        // Hide banner
+        banner.style.display = 'none';
+    }
+}
+
+// ==========================================
+// SCROLL-BASED HEADER
+// ==========================================
+
+const header = document.querySelector('header');
+
+if (header) {
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 80) {
+            header.classList.add('shrink');
+        } else {
+            header.classList.remove('shrink');
+        }
+    });
+}
 
 console.log('BS Gamer_z website loaded successfully! ✅');

@@ -2329,3 +2329,110 @@ html.light-theme .skeleton-line {
         grid-template-columns: 1fr;
     }
 }
+/* ==========================================
+   LIVE NOW BANNER
+   ========================================== */
+
+.live-banner {
+    background: #ff0000;
+    color: #ffffff;
+    padding: 12px 20px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 99999;
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+    animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.live-banner-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.live-dot {
+    font-size: 20px;
+    animation: pulse-dot 1.2s infinite;
+}
+
+@keyframes pulse-dot {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.live-text {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.live-banner-btn {
+    background: #ffffff;
+    color: #ff0000;
+    padding: 6px 18px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.live-banner-btn:hover {
+    background: #f0f0f0;
+    transform: scale(1.05);
+}
+
+/* Light theme support */
+html.light-theme .live-banner {
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.25);
+}
+/* ==========================================
+   SCROLL-BASED STICKY HEADER
+   ========================================== */
+
+header {
+    transition: all 0.3s ease;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background: #181818;
+    padding: 20px 20px;
+    border-bottom: 1px solid #333;
+}
+
+/* When user scrolls down, header shrinks */
+header.shrink {
+    padding: 10px 20px;
+    border-bottom: 2px solid #ff0000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+header.shrink .site-logo {
+    width: 50px;
+    height: 50px;
+}
+
+header.shrink .logo span {
+    font-size: 20px;
+}
+
+/* Light theme support */
+html.light-theme header {
+    background: #ffffff;
+    border-bottom: 1px solid #dddddd;
+}
+
+html.light-theme header.shrink {
+    border-bottom: 2px solid #ff0000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
