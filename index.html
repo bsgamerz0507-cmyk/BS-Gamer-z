@@ -69,18 +69,7 @@
   gtag('config', 'G-YRGNL4NWEN');
 </script>
 </head>
-<!-- ==========================================
-     ONESIGNAL PUSH NOTIFICATIONS (SECURE FIX)
-     ========================================== -->
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(function(OneSignal) {
-    OneSignal.init({
-      appId: "YOUR_APP_ID_HERE",
-    });
-  });
-</script>
+
 <body>
 
 <!-- ==========================================
@@ -125,6 +114,7 @@
             <button class="nav-btn" type="button" data-nav="post">
                 Posts
             </button>
+            <button id="installAppBtn" class="install-btn" style="display:none;">📲 Install App</button>
 <button
     class="share-btn"
     id="shareWebsite"
@@ -139,6 +129,9 @@
     type="button"
 >
     📊 Dashboard
+</button>
+<button class="theme-toggle-btn" id="themeToggle" type="button" title="Toggle Dark/Light Mode">
+    🌙
 </button>
     <button
         class="settings-btn"
