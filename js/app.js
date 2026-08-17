@@ -1,5 +1,5 @@
 // ==========================================
-// BS Gamer_z - ULTIMATE FIX
+// BS Gamer_z - FULLY WORKING APP (ALL FEATURES)
 // ==========================================
 
 const STORAGE_KEY = "bs_gamer_z_content";
@@ -22,6 +22,7 @@ const cancelContentButton = document.querySelector("#cancelContent");
 
 let contentData = loadContent();
 let allYouTubeVideos = [];
+let allYouTubePosts = [];
 let editingId = null;
 let currentPage = 1;
 const ITEMS_PER_PAGE = 50;
@@ -45,7 +46,18 @@ function saveContent() {
 }
 
 // ==========================================
-// LOAD YOUTUBE DATA (ULTIMATE FIX)
+// AUTO-DETECT PATH
+// ==========================================
+
+function getDataPath() {
+    if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+        return 'data/youtube.json';
+    }
+    return '/BS-Gamer-z/data/youtube.json';
+}
+
+// ==========================================
+// LOAD YOUTUBE DATA
 // ==========================================
 
 async function loadYouTubeData() {
@@ -53,8 +65,8 @@ async function loadYouTubeData() {
     container.innerHTML = '<p style="text-align:center;color:#fff;padding:40px;">⏳ Loading your videos...</p>';
     
     try {
-        // ULTIMATE FIX: Exact path with cache-buster
-        const response = await fetch('/BS-Gamer-z/data/youtube.json?t=' + Date.now());
+        const path = getDataPath();
+        const response = await fetch(path + '?t=' + Date.now());
         
         if (!response.ok) {
             throw new Error('Failed to load file');
@@ -62,17 +74,42 @@ async function loadYouTubeData() {
         
         const data = await response.json();
         allYouTubeVideos = data.videos || [];
+        allYouTubePosts = data.posts || [];
         
-        // Update everything
+        // UPDATE TIMESTAMP HERE
+        updateTimestamp(data);
+        
         updateStatistics();
+        updateDashboard();
         updateFeaturedVideo();
-        renderContent('all');
+        
+        const activeCategory = document.querySelector('.category.active');
+        const category = activeCategory ? activeCategory.dataset.category : 'all';
+        renderContent(category);
         
         console.log(`✅ Loaded ${allYouTubeVideos.length} videos`);
         
     } catch (error) {
         console.error('Failed to load YouTube data:', error);
-        container.innerHTML = `<p style="text-align:center;color:#ff0000;padding:40px;">❌ Could not find data/youtube.json. Please make sure the file exists.</p>`;
+        container.innerHTML = `<p style="text-align:center;color:#ff0000;padding:40px;">❌ Could not find data/youtube.json.</p>`;
+    }
+}
+
+// ==========================================
+// UPDATE TIMESTAMP (NEW)
+// ==========================================
+
+function updateTimestamp(data) {
+    const lastSyncEl = document.getElementById('lastSyncTime');
+    if (lastSyncEl && data.lastUpdated) {
+        const date = new Date(data.lastUpdated);
+        const formatted = date.toLocaleString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric',
+            hour: 'numeric', minute: '2-digit', hour12: true
+        });
+        lastSyncEl.textContent = formatted;
+    } else if (lastSyncEl) {
+        lastSyncEl.textContent = 'Not available';
     }
 }
 
@@ -94,6 +131,8 @@ function renderContent(type) {
         filtered = allYouTubeVideos.filter(item => item.type === 'short');
     } else if (type === 'live') {
         filtered = allYouTubeVideos.filter(item => item.type === 'live');
+    } else if (type === 'post') {
+        filtered = allYouTubePosts;
     }
     
     if (filtered.length === 0) {
@@ -105,9 +144,18 @@ function renderContent(type) {
         const card = document.createElement('div');
         card.className = 'card';
         
+        // Thumbnail logic
+        const videoId = item.id;
+        const imgUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
         card.innerHTML = `
-            <div class="thumbnail">
-                <img src="${item.thumbnail}" alt="${item.title}" class="youtube-thumbnail" loading="lazy">
+            <div class="thumbnail" style="background:#2a2a2a; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;">
+                <img src="${imgUrl}" 
+                     alt="${item.title}" 
+                     class="youtube-thumbnail" 
+                     loading="lazy" 
+                     style="width:100%; height:100%; object-fit:cover;"
+                     onerror="this.onerror=null; this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg';">
             </div>
             <div class="card-content">
                 <span class="content-type">${item.type.toUpperCase()}</span>
@@ -123,11 +171,20 @@ function renderContent(type) {
 }
 
 // ==========================================
+// HELPERS
+// ==========================================
+
+function getContentIcon(type) {
+    const icons = { video: '🎬', short: '📱', live: '🔴', post: '📝' };
+    return icons[type] || '🎮';
+}
+
+// ==========================================
 // UPDATE STATISTICS
 // ==========================================
 
 function updateStatistics() {
-    let videos = 0, shorts = 0, live = 0;
+    let videos = 0, shorts = 0, live = 0, posts = 0;
     
     allYouTubeVideos.forEach(v => {
         if (v.type === 'video') videos++;
@@ -135,12 +192,14 @@ function updateStatistics() {
         else if (v.type === 'live') live++;
     });
     
+    allYouTubePosts.forEach(() => posts++);
+    
     const numbers = document.querySelectorAll('.stat-number');
     if (numbers.length >= 4) {
         numbers[0].textContent = videos;
         numbers[1].textContent = shorts;
         numbers[2].textContent = live;
-        numbers[3].textContent = 0;
+        numbers[3].textContent = posts;
     }
 }
 
@@ -164,7 +223,7 @@ function updateFeaturedVideo() {
         return;
     }
     
-    thumbnail.innerHTML = `<img src="${featured.thumbnail}" alt="Featured Video">`;
+    thumbnail.innerHTML = `<img src="${featured.thumbnail || `https://img.youtube.com/vi/${featured.id}/maxresdefault.jpg`}" alt="Featured Video">`;
     title.textContent = featured.title;
     description.textContent = 'Latest upload from BS Gamer_z.';
     date.textContent = new Date(featured.publishedAt).toLocaleDateString();
@@ -184,9 +243,106 @@ categoryButtons.forEach(button => {
 });
 
 // ==========================================
+// ADD CONTENT BUTTON (FIXED)
+// ==========================================
+
+if (addContentButton && addContentForm) {
+    addContentButton.addEventListener('click', function() {
+        editingId = null;
+        contentForm.reset();
+        addContentForm.classList.add('show');
+        addContentForm.scrollIntoView({ behavior: 'smooth' });
+    });
+}
+
+if (cancelContentButton && addContentForm) {
+    cancelContentButton.addEventListener('click', function() {
+        addContentForm.classList.remove('show');
+    });
+}
+
+// ==========================================
+// SHARE BUTTON (FIXED)
+// ==========================================
+
+const shareButton = document.getElementById('shareWebsite');
+if (shareButton) {
+    shareButton.addEventListener('click', async function() {
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: 'BS Gamer_z',
+                    text: 'Check out BS Gamer_z for gaming videos, Shorts, live streams, and more!',
+                    url: window.location.origin
+                });
+            } else {
+                await navigator.clipboard.writeText(window.location.origin);
+                alert('Website link copied to clipboard! 🔗');
+            }
+        } catch (error) {
+            console.log('Share cancelled or failed.');
+        }
+    });
+}
+
+// ==========================================
+// DASHBOARD (FIXED)
+// ==========================================
+
+function updateDashboard() {
+    const videos = allYouTubeVideos.filter(v => v.type === 'video').length;
+    const shorts = allYouTubeVideos.filter(v => v.type === 'short').length;
+    const live = allYouTubeVideos.filter(v => v.type === 'live').length;
+    const posts = allYouTubePosts.length;
+    const visits = Number(localStorage.getItem('bs_website_visits')) || 0;
+    
+    document.getElementById('dashVideos').textContent = videos;
+    document.getElementById('dashShorts').textContent = shorts;
+    document.getElementById('dashLive').textContent = live;
+    document.getElementById('dashPosts').textContent = posts;
+    document.getElementById('dashVisits').textContent = visits.toLocaleString();
+}
+
+document.getElementById('dashboardButton').addEventListener('click', () => {
+    updateDashboard();
+    document.getElementById('dashboardPanel').classList.add('show');
+});
+document.getElementById('closeDashboard').addEventListener('click', () => {
+    document.getElementById('dashboardPanel').classList.remove('show');
+});
+
+// ==========================================
+// VISITOR COUNTER
+// ==========================================
+
+const visitorElement = document.getElementById('visitorCount');
+if (visitorElement) {
+    let visits = Number(localStorage.getItem('bs_website_visits')) || 0;
+    visits++;
+    localStorage.setItem('bs_website_visits', visits);
+    visitorElement.textContent = visits.toLocaleString();
+}
+
+// ==========================================
 // INITIALIZE
 // ==========================================
 
 loadYouTubeData();
 
-console.log('BS Gamer_z website loaded!');
+// ==========================================
+// SCROLL-BASED HEADER (Shrink Effect)
+// ==========================================
+
+const header = document.querySelector('header');
+
+if (header) {
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 80) {
+            header.classList.add('shrink');
+        } else {
+            header.classList.remove('shrink');
+        }
+    });
+}
+
+console.log('BS Gamer_z website loaded successfully! ✅');
