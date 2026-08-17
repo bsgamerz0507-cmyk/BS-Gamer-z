@@ -2570,7 +2570,7 @@ html.light-theme .footer-bottom strong {
 .youtube-thumbnail,
 .card img,
 .featured-thumbnail img {
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.5s ease;
 }
 
