@@ -3,24 +3,24 @@
   "short_name": "BS Gamer_z",
   "id": "/",
   "description": "Gaming Videos, Shorts, Live Streams and Posts",
-  "start_url": "./index.html",
+  "start_url": "/BS-Gamer-z/index.html",
   "display": "standalone",
   "background_color": "#0f0f0f",
   "theme_color": "#ff0000",
   "orientation": "portrait-primary",
 
-  "icons": [
+    "icons": [
     {
-      "src": "images/icon-192.png",
+      "src": "images/logo-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "images/icon-512.png",
+      "src": "images/logo-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ]
   ]
 }
