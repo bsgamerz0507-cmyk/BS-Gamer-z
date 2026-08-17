@@ -81,6 +81,7 @@ async function loadYouTubeData() {
         
         updateStatistics();
         updateDashboard();
+        renderMostViewed();
         updateFeaturedVideo();
         
         const activeCategory = document.querySelector('.category.active');
@@ -386,4 +387,88 @@ window.unlockAdmin = function() {
 
 console.log('🔒 Admin mode hidden. Press Ctrl + Alt + B to unlock.');
 console.log('💡 Alternatively, type unlockAdmin() in the console.');
+
+// ==========================================
+// MOST VIEWED SECTION (Top 5 recent videos)
+// ==========================================
+
+function renderMostViewed() {
+    const grid = document.getElementById('mostViewedGrid');
+    if (!grid) return;
+
+    // Sort by latest publish date (most recent first)
+    const sorted = [...allYouTubeVideos].sort((a, b) => {
+        return new Date(b.publishedAt) - new Date(a.publishedAt);
+    });
+
+    // Take top 5
+    const topVideos = sorted.slice(0, 5);
+
+    grid.innerHTML = '';
+    topVideos.forEach(video => {
+        const card = document.createElement('div');
+        card.className = 'most-viewed-card';
+        card.innerHTML = `
+            <div class="thumbnail">
+                <img src="https://img.youtube.com/vi/${video.id}/maxresdefault.jpg" alt="${video.title}" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
+            </div>
+            <div class="card-content">
+                <h3>${video.title}</h3>
+                <div class="meta">📅 ${new Date(video.publishedAt).toLocaleDateString()}</div>
+            </div>
+        `;
+        // Click to open video
+        card.addEventListener('click', () => {
+            window.open(`https://www.youtube.com/watch?v=${video.id}`, '_blank');
+        });
+        grid.appendChild(card);
+    });
+}
+
+// ==========================================
+// THEME TOGGLE BUTTON
+// ==========================================
+
+const themeToggle = document.getElementById('themeToggle');
+
+if (themeToggle) {
+    // Check for saved theme
+    const savedTheme = localStorage.getItem('bs_theme');
+    if (savedTheme === 'light') {
+        document.documentElement.classList.add('light-theme');
+        themeToggle.textContent = '☀️';
+    }
+
+    themeToggle.addEventListener('click', function() {
+        const isLight = document.documentElement.classList.toggle('light-theme');
+        localStorage.setItem('bs_theme', isLight ? 'light' : 'dark');
+        themeToggle.textContent = isLight ? '☀️' : '🌙';
+    });
+}
+
+// ==========================================
+// SCROLL TO TOP BUTTON
+// ==========================================
+
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+if (scrollTopBtn) {
+    // Show button when user scrolls down 300px
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            scrollTopBtn.classList.add('show');
+        } else {
+            scrollTopBtn.classList.remove('show');
+        }
+    });
+
+    // Scroll to top smoothly when clicked
+    scrollTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
+
 console.log('BS Gamer_z website loaded successfully! ✅');

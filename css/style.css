@@ -2614,3 +2614,139 @@ html.light-theme .sync-timestamp {
 html.light-theme .sync-timestamp #lastSyncTime {
     color: #ff0000;
 }
+/* ==========================================
+   latest-uploads-section
+   ========================================== */
+
+.most-viewed-section {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+}
+
+.most-viewed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.most-viewed-card {
+    background: #181818;
+    border: 1px solid #333;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.most-viewed-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(255, 0, 0, 0.15);
+}
+
+.most-viewed-card .thumbnail {
+    height: 140px;
+    background: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.most-viewed-card .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.most-viewed-card .card-content {
+    padding: 12px 16px;
+}
+
+.most-viewed-card h3 {
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.most-viewed-card .meta {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Light theme */
+html.light-theme .most-viewed-card {
+    background: #fff;
+    border-color: #ddd;
+}
+
+html.light-theme .most-viewed-card h3 {
+    color: #222;
+}
+/* ==========================================
+   THEME TOGGLE BUTTON
+   ========================================== */
+
+.theme-toggle-btn {
+    background: transparent;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+    background: #333;
+    transform: scale(1.05);
+}
+
+html.light-theme .theme-toggle-btn {
+    border-color: #ccc;
+    color: #222;
+}
+
+html.light-theme .theme-toggle-btn:hover {
+    background: #eee;
+}
+/* ==========================================
+   SCROLL TO TOP BUTTON
+   ========================================== */
+
+.scroll-top-btn {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    width: 52px;
+    height: 52px;
+    border: none;
+    border-radius: 50%;
+    background: #ff0000;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    transition: 0.25s ease;
+    z-index: 9998;
+}
+
+.scroll-top-btn.show {
+    display: flex;
+}
+
+.scroll-top-btn:hover {
+    transform: translateY(-3px);
+    background: #cc0000;
+}
+
+html.light-theme .scroll-top-btn {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
