@@ -2750,3 +2750,27 @@ html.light-theme .theme-toggle-btn:hover {
 html.light-theme .scroll-top-btn {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
+/* ==========================================
+   DISSOLVED BACKGROUND LOGO (WATERMARK)
+   ========================================== */
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../images/logo.jpeg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    opacity: 0.20;          /* Very faint (dissolved) */
+    pointer-events: none;   /* Lets you click through it */
+    z-index: -1;            /* Sits behind all content */
+}
+
+/* Make it slightly more visible on light theme */
+html.light-theme body::before {
+    opacity: 0.07;
+}
