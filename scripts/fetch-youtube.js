@@ -3,7 +3,7 @@ const path = require('path');
 const https = require('https');
 
 // YouTube API configuration
-const API_KEY = process.env.YOUTUBE_API_KEY;
+const API_KEY = process.env.AIzaSyBIWm0A_MEffFfVpuGTdkopkaOo4ppPz5g;
 const CHANNEL_ID = 'UC_DHq9eu17O5QFfVvne1Htg';
 const MAX_RESULTS = 50;
 

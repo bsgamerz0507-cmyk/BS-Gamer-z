@@ -74,6 +74,7 @@ async function loadYouTubeData() {
         
         const data = await response.json();
         allYouTubeVideos = data.videos || [];
+        checkUpcomingLive(); // <--- Add this line
         allYouTubePosts = data.posts || [];
         
         // UPDATE TIMESTAMP HERE
@@ -162,7 +163,7 @@ function renderContent(type) {
                 <span class="content-type">${item.type.toUpperCase()}</span>
                 <h3>${item.title}</h3>
                 <div class="card-footer">
-                    <span class="date">${new Date(item.publishedAt).toLocaleDateString()}</span>
+                    <span class="date">${timeAgo(item.publishedAt)}</span>
                     <a href="https://www.youtube.com/watch?v=${item.id}" class="watch-btn" target="_blank">Watch</a>
                 </div>
             </div>
@@ -470,5 +471,113 @@ if (scrollTopBtn) {
         });
     });
 }
+
+// ==========================================
+// PWA INSTALL BUTTON
+// ==========================================
+let deferredPrompt;
+const installBtn = document.getElementById('installAppBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'inline-block';
+});
+
+installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            installBtn.style.display = 'none';
+        }
+        deferredPrompt = null;
+    }
+});
+
+// ==========================================
+// TIME AGO HELPER (e.g., "2 days ago")
+// ==========================================
+
+function timeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (seconds < 60) return "Just now";
+    if (minutes < 60) return minutes + "m ago";
+    if (hours < 24) return hours + "h ago";
+    if (days === 0) return "Today";
+    if (days === 1) return "Yesterday";
+    if (days < 7) return days + " days ago";
+    if (weeks < 4) return weeks + "w ago";
+    if (months < 12) return months + "mo ago";
+    return years + "y ago";
+}
+
+// ==========================================
+// LIVE COUNTDOWN BANNER (For upcoming streams)
+// ==========================================
+
+function checkUpcomingLive() {
+    const banner = document.getElementById('liveBanner');
+    const link = document.getElementById('liveBannerLink');
+    const bannerText = document.querySelector('.live-text');
+    
+    if (!banner || !link || !bannerText) return;
+    
+    // Find an upcoming live stream (not currently live, but scheduled)
+    const upcoming = allYouTubeVideos.find(v => 
+        v.isLive === false && 
+        v.title && 
+        v.title.toLowerCase().includes('live') && 
+        new Date(v.publishedAt) > new Date()
+    );
+    
+    // Also check for any video marked as "upcoming" by YouTube
+    const upcomingLive = allYouTubeVideos.find(v => 
+        v.liveBroadcastContent === 'upcoming'
+    );
+    
+    const targetStream = upcomingLive || upcoming;
+    
+    if (targetStream) {
+        const streamTime = new Date(targetStream.publishedAt);
+        const now = new Date();
+        const diff = streamTime - now;
+        
+        if (diff > 0) {
+            // Show countdown banner
+            banner.style.display = 'block';
+            banner.style.background = '#2563eb'; // Blue for upcoming
+            link.href = `https://www.youtube.com/watch?v=${targetStream.id}`;
+            
+            // Update countdown every second
+            const timer = setInterval(() => {
+                const currentDiff = streamTime - new Date();
+                if (currentDiff <= 0) {
+                    clearInterval(timer);
+                    // Switch to LIVE NOW banner
+                    banner.style.background = '#ff0000';
+                    bannerText.innerHTML = '<strong>🔴 LIVE NOW!</strong> Join the stream!';
+                    return;
+                }
+                
+                const hours = Math.floor(currentDiff / (1000 * 60 * 60));
+                const minutes = Math.floor((currentDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((currentDiff % (1000 * 60)) / 1000);
+                
+                bannerText.innerHTML = `<strong>⏳ Next Live in ${hours}h ${minutes}m ${seconds}s</strong>`;
+            }, 1000);
+        }
+    }
+}
+
 
 console.log('BS Gamer_z website loaded successfully! ✅');
