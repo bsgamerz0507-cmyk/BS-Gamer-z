@@ -579,5 +579,33 @@ function checkUpcomingLive() {
     }
 }
 
+// ==========================================
+// TOP NAVIGATION TABS (FIXED - Triggers bottom tabs)
+// ==========================================
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Remove active class from all top nav buttons
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        // Map top nav text to category data attribute
+        const page = this.textContent.toLowerCase().trim();
+        const categoryMap = {
+            home: 'all',
+            videos: 'video',
+            shorts: 'short',
+            live: 'live',
+            posts: 'post'
+        };
+        const category = categoryMap[page] || 'all';
+
+        // Find the bottom category button and click it
+        const categoryBtn = document.querySelector(`.category[data-category="${category}"]`);
+        if (categoryBtn) {
+            categoryBtn.click();
+        }
+    });
+});
 
 console.log('BS Gamer_z website loaded successfully! ✅');
