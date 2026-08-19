@@ -66,7 +66,7 @@ async function loadYouTubeData() {
     
     try {
         const path = getDataPath();
-        const response = await fetch(path + '?t=' + Date.now());
+        const response = await fetch('/BS-Gamer-z/data/youtube.json?t=999999');
         
         if (!response.ok) {
             throw new Error('Failed to load file');
