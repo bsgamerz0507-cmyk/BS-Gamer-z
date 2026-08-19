@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   sync:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04   # THIS IS THE FIX: Using the old Ubuntu runner
 
     steps:
       - name: Checkout repository
@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
+          node-version: '20.x'
 
       - name: Fetch latest YouTube uploads
         env:
