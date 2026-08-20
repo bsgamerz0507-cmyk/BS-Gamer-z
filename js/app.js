@@ -608,4 +608,34 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     });
 });
 
+// ==========================================
+// TEMPORARY MANUAL SHORT (Fix for GitHub delay)
+// ==========================================
+// Remove this block once GitHub updates automatically.
+
+(function addMissingShort() {
+    const container = document.getElementById('youtubeContentGrid') || document.querySelector('.content-grid');
+    if (!container) return;
+
+    // Create a card for the new Short
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+        <div class="thumbnail">
+            <img src="https://img.youtube.com/vi/YOUR_VIDEO_ID_HERE/hqdefault.jpg" alt="My Gameplay my rules headshot.#gameplay#shorts #myrules#headshot#ffshorts #millionviews#trending#ff" class="youtube-thumbnail" loading="lazy">
+        </div>
+        <div class="card-content">
+            <span class="content-type">SHORT</span>
+            <h3>Your New Short Title</h3>
+            <div class="card-footer">
+                <span class="date">Today</span>
+                <a href="https://youtube.com/shorts/eJkLOdxshYc?si=peOW3L75Ekj6GlWQ" class="watch-btn" target="_blank">Watch</a>
+            </div>
+        </div>
+    `;
+
+    // Add it to the top of the grid
+    container.prepend(card);
+})();
+
 console.log('BS Gamer_z website loaded successfully! ✅');
