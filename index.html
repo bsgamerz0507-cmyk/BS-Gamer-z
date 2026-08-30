@@ -1,1098 +1,439 @@
-<!-- Update: Trigger fresh build -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- ==========================================
-         BASIC META
-         ========================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#ff0000">
-    
-    <!-- ==========================================
-         SEO TITLE & DESCRIPTION
-         ========================================== -->
-    <title>BS Gamer_z | Free Fire Gaming Videos, Shorts & Live Streams</title>
-    <meta name="description" content="BS Gamer_z - Watch Free Fire gaming videos, Shorts, live streams and community posts. Daily gaming content, epic BOOYAH moments, and more!">
-    <meta name="keywords" content="BS Gamer_z, Free Fire, Gaming, YouTube, Shorts, Live Streams, Free Fire MAX, Gaming Videos, BOOYAH">
-    <meta name="author" content="BS Gamer_z">
-    <meta name="robots" content="index, follow">
-    
-    <!-- ==========================================
-         OPEN GRAPH (Facebook, WhatsApp, etc.)
-         ========================================== -->
-    <meta property="og:title" content="BS Gamer_z | Free Fire Gaming Videos & Shorts">
-    <meta property="og:description" content="Watch Free Fire gaming videos, Shorts, Live Streams & Community Posts from BS Gamer_z.">
-    <meta property="og:image" content="https://bsgamerz0507-cmyk.github.io/BS-Gamer-z/images/logo.jpeg">
-    <meta property="og:url" content="https://bsgamerz0507-cmyk.github.io/BS-Gamer-z/">
-    <meta property="og:site_name" content="BS Gamer_z">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="en_US">
-    
-    <!-- ==========================================
-         TWITTER / X CARDS
-         ========================================== -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="BS Gamer_z | Free Fire Gaming Videos & Shorts">
-    <meta name="twitter:description" content="Watch Free Fire gaming videos, Shorts & Live Streams from BS Gamer_z.">
-    <meta name="twitter:image" content="https://bsgamerz0507-cmyk.github.io/BS-Gamer-z/images/logo.jpeg">
-    <meta name="twitter:site" content="@BSGamer_z">
-    <meta name="twitter:creator" content="@BSGamer_z">
-    
-    <!-- ==========================================
-         GOOGLE VERIFICATION
-         ========================================== -->
-    <meta name="google-site-verification" content="4PexN73h19rKIUYDXWxDXi2UoHdOiY4xlOqIZsrIu-g" />
+    <title>BS Gamer_z - Gaming Videos, Shorts & Live Streams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #ff0000;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .stat {
+            background: #181818;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 15px 25px;
+            font-size: 14px;
+        }
+        .stat strong {
+            display: block;
+            font-size: 24px;
+            color: #ff0000;
+        }
+        .videos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+        .video-card {
+            background: #181818;
+            border: 1px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+        }
+        .card-info {
+            padding: 15px;
+            font-size: 14px;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 13px;
+            color: #777;
+        }
+    .video-thumbnail {
+        position: relative;
+        cursor: pointer;
+        width: 100%;
+        height: 200px;
+        background: #181818;
+        overflow: hidden;
+    }
 
-    <!-- ==========================================
-         CANONICAL URL (prevents duplicate content)
-         ========================================== -->
-    <link rel="canonical" href="https://bsgamerz0507-cmyk.github.io/BS-Gamer-z/">
+    .video-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-    <!-- ==========================================
-         FAVICON & MANIFEST
-         ========================================== -->
-    <link rel="icon" href="images/logo.jpeg" type="image/jpeg">
-    <link rel="manifest" href="manifest.json">
+    .video-thumbnail .play-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 40px;
+        color: #fff;
+        background: rgba(255, 0, 0, 0.8);
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-    <!-- ==========================================
-         STYLESHEETS
-         ========================================== -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YRGNL4NWEN');
-</script>
-<link rel="apple-touch-icon" href="images/logo.jpeg">
-<link rel="mask-icon" href="images/logo.jpeg" color="#ff0000">
+    .video-thumbnail:hover .play-button {
+        background: #ff0000;
+    }
+
+    .video-thumbnail iframe {
+        width: 100%;
+        height: 100%;
+    }
+        .filter-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        background: #272727;
+        border: 1px solid #333;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .tab-btn.active {
+        background: #ff0000;
+        border-color: #ff0000;
+        color: #fff;
+    }
+
+    .tab-btn:hover {
+        background: #333;
+    }
+        .theme-toggle {
+        background: #333;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 18px;
+        cursor: pointer;
+        margin: 10px auto;
+        display: block;
+    }
+
+    body.light-mode {
+        background: #f5f5f5;
+        color: #222;
+    }
+
+    body.light-mode .video-card {
+        background: #fff;
+        border-color: #ddd;
+    }
+    .theme-toggle {
+        background: #333;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 20px;
+        cursor: pointer;
+        margin: 15px auto;
+        display: block;
+        transition: 0.2s;
+    }
+
+    .theme-toggle:hover {
+        background: #555;
+    }
+
+    body.light-mode {
+        background: #f5f5f5 !important;
+        color: #222 !important;
+    }
+
+    body.light-mode h1 {
+        color: #ff0000 !important;
+    }
+
+    body.light-mode .video-card {
+        background: #fff !important;
+        border-color: #ddd !important;
+    }
+
+    body.light-mode .stat {
+        background: #fff !important;
+        border-color: #ddd !important;
+        color: #222 !important;
+    }
+
+    body.light-mode .filter-tabs .tab-btn {
+        background: #eee !important;
+        border-color: #ddd !important;
+        color: #222 !important;
+    }
+
+    body.light-mode .tab-btn.active {
+        background: #ff0000 !important;
+        color: #fff !important;
+    }
+    /* Theme Switch */
+    .theme-switch {
+        display: none;
+    }
+
+    .theme-toggle-label {
+        display: block;
+        width: 40px;
+        height: 40px;
+        background: #333;
+        color: #fff;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-size: 20px;
+        cursor: pointer;
+        margin: 10px auto;
+    }
+
+    /* When checkbox is checked, change to light mode */
+    .theme-switch:checked ~ body {
+        background: #f5f5f5 !important;
+        color: #222 !important;
+    }
+
+    .theme-switch:checked ~ body .video-card {
+        background: #fff !important;
+        border-color: #ddd !important;
+    }
+
+    .theme-switch:checked ~ body .stat {
+        background: #fff !important;
+        border-color: #ddd !important;
+        color: #222 !important;
+    }
+
+    .theme-switch:checked ~ body h1 {
+        color: #ff0000 !important;
+    }
+    .theme-toggle-link {
+        display: block;
+        width: fit-content;
+        background: #333;
+        color: #fff;
+        border: 1px solid #555;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+        margin: 10px auto;
+    }
+   
+    .theme-toggle-btn {
+        background: #333;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    </style>
+<link rel="manifest" href="manifest.json">
 </head>
-
 <body>
-
-<!-- ==========================================
-     LIVE NOW BANNER
-     ========================================== -->
-<div id="liveBanner" class="live-banner" style="display:none;">
-    <div class="live-banner-content">
-        <span class="live-dot">🔴</span>
-        <span class="live-text"><strong>LIVE NOW!</strong> Join the stream on YouTube!</span>
-        <a href="#" id="liveBannerLink" class="live-banner-btn" target="_blank">▶ Watch Now</a>
+    <h1>BS Gamer_z</h1>
+       <p>Free Fire Gaming • Shorts • Live Streams</p>
+    
+    <div class="stats">
+        <div class="stat"><strong>217</strong> Videos</div>
+        <div class="stat"><strong>65</strong> Shorts</div>
+        <div class="stat"><strong>0</strong> Live</div>
     </div>
+    <!-- ==========================================
+     FILTER TABS
+     ========================================== -->
+<div class="filter-tabs">
+    <button class="tab-btn active" onclick="filterVideos('all')">All</button>
+    <button class="tab-btn" onclick="filterVideos('video')">🎬 Videos</button>
+    <button class="tab-btn" onclick="filterVideos('short')">📱 Shorts</button>
 </div>
-
-    <!-- ================================
-         HEADER
-         ================================ -->
-
-    <header>
-        <div class="logo">
-            <img src="images/logo.jpeg" alt="BS Gamer_z Logo" class="site-logo">
-            <span>BS Gamer_z</span>
+    <div class="videos">
+        <!-- Video 1 -->
+        <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/0txpsEp8fqM" allowfullscreen></iframe>
+            <div class="card-info"><strong>10 KILLS + BOOYAH! 😱 | Free Fire MAX BR Gameplay</strong></div>
         </div>
-
-            <nav class="main-nav">
-
-            <button class="nav-btn active" type="button" data-nav="home">
-                Home
-            </button>
-
-            <button class="nav-btn" type="button" data-nav="video">
-                Videos
-            </button>
-
-            <button class="nav-btn" type="button" data-nav="short">
-                Shorts
-            </button>
-
-            <button class="nav-btn" type="button" data-nav="live">
-                Live
-            </button>
-
-            <button class="nav-btn" type="button" data-nav="post">
-                Posts
-            </button>
-            <button id="installAppBtn" class="install-btn" style="display:none;">📲 Install App</button>
-<button
-    class="share-btn"
-    id="shareWebsite"
-    type="button"
->
-    🔗 Share
-</button>
-
-<button
-    class="dashboard-btn"
-    id="dashboardButton"
-    type="button"
->
-    📊 Dashboard
-</button>
-<button class="theme-toggle-btn" id="themeToggle" type="button" title="Toggle Dark/Light Mode">
-    🌙
-</button>
-    <button
-        class="settings-btn"
-        id="settingsButton"
-        type="button"
-    >
-        ⚙️ Settings
-    </button>
-
-</nav>
-
-        </div>
-
-    </header>
-
-
-
-    <!-- ================================
-         HERO
-         ================================ -->
-
-    <section class="hero">
-
-        <h1>
-            Welcome to <span>BS Gamer_z</span>
-        </h1>
-
-        <p>
-            Videos • Shorts • Live Streams • Community Posts
-        </p>
-
-    </section>
-
-
-
-    <!-- ================================
-         STATISTICS
-         ================================ -->
-
-    <section class="stats">
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                🎬
-            </div>
-
-            <div class="stat-number">
-                0
-            </div>
-
-            <div class="stat-label">
-                Videos
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                📱
-            </div>
-
-            <div class="stat-number">
-                0
-            </div>
-
-            <div class="stat-label">
-                Shorts
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                🔴
-            </div>
-
-            <div class="stat-number">
-                0
-            </div>
-
-            <div class="stat-label">
-                Live Streams
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                📝
-            </div>
-
-            <div class="stat-number">
-                0
-            </div>
-
-            <div class="stat-label">
-                Posts
-            </div>
-
-        </div>
-
-        <div class="stat-card">
-
-        <div class="stat-icon">
-            👥
-        </div>
-
-        <div
-            class="stat-number"
-            id="visitorCount"
-        >
-            0
-        </div>
-
-        <div class="stat-label">
-            Website Visits
-        </div>
-
-        </div>
-        <!-- ==========================================
-     LAST SYNCED TIMESTAMP
-     ========================================== -->
-        <div class="sync-timestamp" id="syncTimestamp">
-            ⏱️ Last synced: <span id="lastSyncTime">Loading...</span>
-        </div>
-    </section>
-
-<!-- ==========================================
-     MOST VIEWED SECTION
-     ========================================== -->
-<section class="most-viewed-section">
-    <div class="section-header">
-       <h2>🔥 Latest Uploads</h2>
-        <span class="view-all-btn">Top Videos</span>
-    </div>
-    <div class="most-viewed-grid" id="mostViewedGrid">
-        <!-- Will be filled by JavaScript -->
-    </div>
-</section>
-
-    <!-- ================================
-     FEATURED VIDEO
-     ================================ -->
-
-
-<section class="featured-video" id="featuredVideo">
-
-    <div class="featured-thumbnail featured-image" id="featuredThumbnail">
-       <img src="images/logo.jpeg" alt="Latest Video" loading="lazy">
-    </div>
-
-    <div class="featured-info">
-
-        <span class="featured-badge">Latest Upload</span>
-
-        <h2 id="featuredTitle" class="featured-title">
-            No featured video yet
-        </h2>
-
-        <p id="featuredDescription">
-            Add your first YouTube video and it will appear here automatically.
-        </p>
-
-        <div class="featured-meta">
-
-            <span id="featuredDate">—</span>
-
-            <a
-                id="featuredWatch"
-                href="#"
-                class="watch-btn"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                ▶ Watch Now
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-    <!-- ================================
-         MAIN CONTENT
-         ================================ -->
-
-    <main class="container">
-
-
-        <!-- SEARCH -->
-
-        <div class="search-box">
-
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="🔍 Search videos, Shorts, live streams and posts..."
-            >
-
-        </div>
-
-
-
-        <!-- SECTION HEADER -->
-
-        <div class="section-header">
-
-            <h2>
-                Latest Content
-            </h2>
-
-
-            <button
-                class="add-content-btn"
-                id="addContentButton"
-                type="button"
-            >
-                + Add Content
-            </button>
-
-        </div>
-
-
-
-        <!-- ================================
-             ADD CONTENT FORM
-             ================================ -->
-
-        <div
-            class="add-content-form"
-            id="addContentForm"
-        >
-
-            <h2>
-                Add New Content
-            </h2>
-
-
-            <form id="contentForm">
-
-
-                <label for="contentType">
-                    Content Type
-                </label>
-
-                <select
-                    id="contentType"
-                    required
-                >
-
-                    <option value="video">
-                        🎬 Video
-                    </option>
-
-                    <option value="short">
-                        📱 Short
-                    </option>
-
-                    <option value="live">
-                        🔴 Live
-                    </option>
-
-                    <option value="post">
-                        📝 Post
-                    </option>
-
-                </select>
-
-
-
-                <label for="contentTitle">
-                    Title
-                </label>
-
-                <input
-                    type="text"
-                    id="contentTitle"
-                    placeholder="Enter content title"
-                    required
-                >
-
-
-
-                <label for="contentUrl">
-                    YouTube Link
-                </label>
-
-                <input
-                    type="url"
-                    id="contentUrl"
-                    placeholder="https://www.youtube.com/..."
-                    required
-                >
-
-
-
-                <label for="contentDescription">
-                    Description
-                </label>
-
-                <textarea
-                    id="contentDescription"
-                    placeholder="Enter a short description"
-                    rows="4"
-                ></textarea>
-
-
-
-                <label for="contentCategory">
-                    Category
-                </label>
-
-                <input
-                    type="text"
-                    id="contentCategory"
-                    placeholder="Example: Free Fire"
-                >
-
-
-
-                <label for="contentDate">
-                    Upload Date
-                </label>
-
-                <input
-                    type="date"
-                    id="contentDate"
-                >
-
-
-
-                <div class="form-buttons">
-
-                    <button
-                        type="submit"
-                        class="save-content-btn"
-                    >
-                        Save Content
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="cancel-content-btn"
-                        id="cancelContent"
-                    >
-                        Cancel
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-
-
-
-        <!-- ================================
-             CATEGORY FILTERS
-             ================================ -->
-
-        <div class="categories">
-
-            <button
-                class="category active"
-                type="button"
-                data-category="all"
-            >
-                All
-            </button>
-
-
-            <button
-                class="category"
-                type="button"
-                data-category="video"
-            >
-                🎬 Videos
-            </button>
-
-
-            <button
-                class="category"
-                type="button"
-                data-category="short"
-            >
-                📱 Shorts
-            </button>
-
-
-            <button
-                class="category"
-                type="button"
-                data-category="live"
-            >
-                🔴 Live
-            </button>
-
-
-            <button
-                class="category"
-                type="button"
-                data-category="post"
-            >
-                📝 Posts
-            </button>
-
-        </div>
-
-
-
-        <!-- ================================
-             CONTENT GRID
-             ================================ -->
-
-       <div class="content-grid" id="youtubeContentGrid">
-
-    <div class="loading-card">
-        <div class="thumbnail">⏳</div>
-
-        <div class="card-content">
-            <span class="content-type">LOADING</span>
-
-            <h3>Fetching latest uploads...</h3>
-
-            <p>Your YouTube videos will appear here automatically.</p>
+        <!-- Video 2 -->
+        <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/s5U0DYPRc20" allowfullscreen></iframe>
+            <div class="card-info"><strong>6yrs Journey 😍 | #journey #ytshorts</strong></div>
         </div>
     </div>
 
-</div>
-
-    </main>
-<!-- ==========================================
-     ABOUT THE CREATOR
-     ========================================== -->
-<section class="about-creator">
-    <div class="about-container">
-        
-        <div class="about-image">
-            <img src="images/logo.jpeg" alt="BS Gamer_z">
-        </div>
-        
-        <div class="about-content">
-            <h2>👑 About BS Gamer_z</h2>
-            <p class="about-bio">
-                Hey gamers! I'm BPKR, the face behind <strong>BS Gamer_z</strong>. 
-                I create daily Free Fire MAX gaming content, epic BOOYAH moments, 
-                and helpful gameplay tips for the community. 
-                <br><br>
-                My goal is to entertain, educate, and grow together with every 
-                single subscriber. Your support means the world to me! 🙏
-            </p>
+    <div class="footer">
+        © 2026 BS Gamer_z • Made with ❤️
+    </div>
+<script>
+    // ==========================================
+    // LOAD ALL 273 VIDEOS FROM JSON
+    // ==========================================
+    fetch('data/youtube.json')
+        .then(response => response.json())
+        .then(data => {
+            var videos = data.videos;
+            var grid = document.querySelector('.videos');
             
-            <div class="about-stats">
-                <div class="about-stat">
-                    <span class="about-number">212+</span>
-                    <span class="about-label">Videos</span>
-                </div>
-                <div class="about-stat">
-                    <span class="about-number">61+</span>
-                    <span class="about-label">Shorts</span>
-                </div>
-                <div class="about-stat">
-                    <span class="about-number">👥</span>
-                    <span class="about-label">Growing Community</span>
-                </div>
-            </div>
+            // Clear existing videos
+            grid.innerHTML = '';
             
-            <div class="about-links">
-                <a href="https://youtube.com/@BSGamer_z" target="_blank" class="about-link youtube">▶ YouTube</a>
-                <a href="https://instagram.com/bsgamerz2" target="_blank" class="about-link instagram">📸 Instagram</a>
-                <a href="https://www.youtube.com/channel/UC_DHq9eu17O5QFfVvne1Htg" target="_blank" class="about-link subscribe">🔔 Subscribe</a>
-            </div>
-        </div>
+            // Show all videos
+            videos.forEach(function(video) {
+                var card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <iframe src="https://www.youtube.com/embed/${video.id}" allowfullscreen></iframe>
+                    <div class="card-info"><strong>${video.title}</strong></div>
+                `;
+                grid.appendChild(card);
+            });
+        })
+        .catch(error => {
+            console.log('Could not load all videos. Showing only 2 videos.');
+        });
+</script>
+<script>
+    // Load videos from data/youtube.json
+    fetch('data/youtube.json')
+        .then(response => response.json())
+        .then(data => {
+            var videos = data.videos;
+            var grid = document.querySelector('.videos');
+            
+            if (grid) {
+                // Clear existing videos
+                grid.innerHTML = '';
+                
+                // Show all 15 videos
+                videos.forEach(function(video) {
+                    var card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <iframe src="https://www.youtube.com/embed/${video.id}" allowfullscreen></iframe>
+                        <div class="card-info"><strong>${video.title}</strong></div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        })
+        .catch(error => console.log('Could not load videos. Using manual videos.'));
+</script>
+<script>
+    // Load videos from data/youtube.json
+    fetch('data/youtube.json')
+        .then(response => response.json())
+        .then(data => {
+            var videos = data.videos;
+            var grid = document.querySelector('.videos');
+            
+            if (grid) {
+                grid.innerHTML = '';
+                
+                videos.forEach(function(video) {
+                    // Create a card with thumbnail only
+                    var card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <div class="video-thumbnail" data-video-id="${video.id}" onclick="playVideo(this)">
+                            <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="${video.title}" loading="lazy">
+                            <div class="play-button">▶</div>
+                        </div>
+                        <div class="card-info"><strong>${video.title}</strong></div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        })
+        .catch(error => console.log('Could not load videos.'));
+    
+    // Function to play video when thumbnail is clicked
+    function playVideo(element) {
+        var videoId = element.getAttribute('data-video-id');
+        element.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allowfullscreen></iframe>`;
+    }
+</script>
+<script>
+    // Store all videos globally
+    var allVideos = [];
+    
+    // Load videos and store them
+    fetch('data/youtube.json')
+        .then(response => response.json())
+        .then(data => {
+            allVideos = data.videos;
+            filterVideos('all'); // Show all videos initially
+        });
+
+    // Filter videos by type
+    function filterVideos(type) {
+        var grid = document.querySelector('.videos');
+        grid.innerHTML = '';
         
-    </div>
-</section>
-
-<!-- ================================
-     FOOTER
-     ================================ -->
-
-<footer>
-    <div class="footer-content">
-
-        <!-- Brand Section -->
-        <div class="footer-section">
-            <h3>BS Gamer_z</h3>
-            <p>Your daily dose of Free Fire gaming content.</p>
-            <p>Videos • Shorts • Live Streams • Community Posts</p>
-        </div>
-
-        <!-- Quick Links -->
-        <div class="footer-section">
-            <h3>Quick Links</h3>
-            <a href="/">Home</a>
-            <a href="/videos">Videos</a>
-            <a href="/shorts">Shorts</a>
-            <a href="/live">Live</a>
-        </div>
-
-        <!-- Contact Info -->
-        <div class="footer-section">
-            <h3>Contact</h3>
-            <p>📧 <a href="mailto:bsgamerz0507@gmail.com">bsgamerz0507@gmail.com</a></p>
-            
-        </div>
-
-        <!-- Social Media -->
-        <div class="footer-section">
-            <h3>Follow Us</h3>
-            <div class="footer-social">
-                <a href="https://youtube.com/@bhanuprakashkr2005?si=nKJWsq9v7aKUxsm-" target="_blank" title="YouTube">
-                    <i class="fab fa-youtube"></i>
-                </a>
-                <a href="https://www.instagram.com/bsgamer_z2?igsh=dWF5OXNuejlzbzNz" target="_blank" title="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="footer-bottom">
-        &copy; 2026 <strong>BS Gamer_z</strong>. All rights reserved. 🎮
-    </div>
-</footer>
-
-<!-- ================================
-     DASHBOARD PANEL
-     ================================ -->
-
-<section
-    class="dashboard-panel"
-    id="dashboardPanel"
->
-
-    <div class="dashboard-header">
-
-        <h2>📊 Creator Dashboard</h2>
-
-        <button
-            id="closeDashboard"
-            class="close-settings"
-            type="button"
-        >
-            ✕
-        </button>
-
-    </div>
-
-    <div class="dashboard-grid">
-
-        <div class="dashboard-card">
-
-            <div class="dash-icon">🎬</div>
-
-            <div
-                class="dash-number"
-                id="dashVideos"
-            >
-                0
-            </div>
-
-            <div class="dash-label">
-                Videos
-            </div>
-
-        </div>
-
-        <div class="dashboard-card">
-
-            <div class="dash-icon">📱</div>
-
-            <div
-                class="dash-number"
-                id="dashShorts"
-            >
-                0
-            </div>
-
-            <div class="dash-label">
-                Shorts
-            </div>
-
-        </div>
-
-        <div class="dashboard-card">
-
-            <div class="dash-icon">🔴</div>
-
-            <div
-                class="dash-number"
-                id="dashLive"
-            >
-                0
-            </div>
-
-            <div class="dash-label">
-                Live
-            </div>
-
-        </div>
-
-        <div class="dashboard-card">
-
-            <div class="dash-icon">📝</div>
-
-            <div
-                class="dash-number"
-                id="dashPosts"
-            >
-                0
-            </div>
-
-            <div class="dash-label">
-                Posts
-            </div>
-
-        </div>
-
-        <div class="dashboard-card">
-
-            <div class="dash-icon">👥</div>
-
-            <div
-                class="dash-number"
-                id="dashVisits"
-            >
-                0
-            </div>
-
-            <div class="dash-label">
-                Website Visits
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="latest-upload-box">
-
-        <h3>⭐ Latest Upload</h3>
-
-        <p id="dashboardLatestTitle">
-            No videos yet
-        </p>
-
-    </div>
-
-</section>
-    <!-- ================================
-         SETTINGS PANEL
-         ================================ -->
-
-    <section
-        class="settings-panel"
-        id="settingsPanel"
-    >
-
-
-        <div class="settings-header">
-
-            <h2>
-                ⚙️ Website Settings
-            </h2>
-
-
-            <button
-                id="closeSettings"
-                class="close-settings"
-                type="button"
-            >
-                ✕
-            </button>
-
-        </div>
-
-
-
-        <!-- SOCIAL MEDIA -->
-
-        <div class="settings-section">
-
-            <h3>
-                👤 Social Media Profiles
-            </h3>
-
-
-            <label for="youtubeProfile">
-                YouTube
-            </label>
-
-            <input
-                type="url"
-                id="youtubeProfile"
-                placeholder="https://youtube.com/@yourchannel"
-            >
-            <label for="youtubeChannelId">
-                YouTube Channel ID
-            </label>
-
-            <input
-                type="text"
-                id="youtubeChannelId"
-                placeholder="UCxxxxxxxxxxxxxxxxxxxxxx"
-            />
-
-            <label for="instagramProfile">
-                Instagram
-            </label>
-
-            <input
-                type="url"
-                id="instagramProfile"
-                placeholder="https://instagram.com/yourusername"
-            >
-
-
-            <label for="facebookProfile">
-                Facebook
-            </label>
-
-            <input
-                type="url"
-                id="facebookProfile"
-                placeholder="https://facebook.com/yourprofile"
-            >
-
-
-            <label for="twitterProfile">
-                X / Twitter
-            </label>
-
-            <input
-                type="url"
-                id="twitterProfile"
-                placeholder="https://x.com/yourusername"
-            >
-
-        </div>
-
-
-
-        <!-- CONTACT INFORMATION -->
-
-        <div class="settings-section">
-
-            <h3>
-                📧 Contact Information
-            </h3>
-
-
-            <label for="contactEmail">
-                Email
-            </label>
-
-            <input
-                type="email"
-                id="contactEmail"
-                placeholder="your@email.com"
-            >
-
-
-            <label for="contactPhone">
-                Phone
-            </label>
-
-            <input
-                type="tel"
-                id="contactPhone"
-                placeholder="+91 XXXXX XXXXX"
-            >
-
-
-            <label for="contactWebsite">
-                Website
-            </label>
-
-            <input
-                type="url"
-                id="contactWebsite"
-                placeholder="https://yourwebsite.com"
-            >
-
-        </div>
-
-
-
-        <!-- FONT -->
-
-        <div class="settings-section">
-
-            <h3>
-                🔤 Website Font
-            </h3>
-
-
-            <select id="fontSelector">
-
-                <option value="default">
-                    Default
-                </option>
-
-                <option value="Arial">
-                    Arial
-                </option>
-
-                <option value="Verdana">
-                    Verdana
-                </option>
-
-                <option value="Georgia">
-                    Georgia
-                </option>
-
-                <option value="Tahoma">
-                    Tahoma
-                </option>
-
-                <option value="Trebuchet MS">
-                    Trebuchet MS
-                </option>
-
-            </select>
-
-        </div>
-
-
-
-        <!-- BACKGROUND -->
-
-        <div class="settings-section">
-
-            <h3>
-                🎨 Website Background
-            </h3>
-
-
-            <select id="backgroundSelector">
-
-                <option value="default">
-                    Default Dark
-                </option>
-
-                <option value="black">
-                    Pure Black
-                </option>
-
-                <option value="darkblue">
-                    Dark Blue
-                </option>
-
-                <option value="darkpurple">
-                    Dark Purple
-                </option>
-
-                <option value="gradient">
-                    Dark Gradient
-                </option>
-
-            </select>
-
-        </div>
-
-<!-- ==========================================
-     THEME
-     ========================================== -->
-
-    <div class="settings-section">
-
-        <h3>
-            🌓 Website Theme
-        </h3>
-
-        <select id="themeSelector">
-
-            <option value="dark">
-                🌙 Dark
-            </option>
-
-            <option value="light">
-                ☀️ Light
-            </option>
-
-        </select>
-
-    </div>
-
-        <!-- SAVE -->
-
-        <button
-            id="saveSettings"
-            class="save-settings-btn"
-            type="button"
-        >
-            💾 Save Settings
-        </button>
-<!-- ================================
-     BACKUP
-     ================================ -->
-
-<div class="backup-section">
-
-    <button
-        id="exportData"
-        class="backup-btn export-btn"
-        type="button"
-    >
-        📤 Export Backup
-    </button>
-
-    <button
-        id="importData"
-        class="backup-btn import-btn"
-        type="button"
-    >
-        📥 Import Backup
-    </button>
-
-    <input
-        type="file"
-        id="importFile"
-        accept=".json"
-        hidden
-    >
-
-</div>
-
-    </section>
-
-
-<button
-    id="scrollTopBtn"
-    class="scroll-top-btn"
-    type="button"
-    title="Back to top"
->
-    ↑
-</button>
-    <!-- ================================
-         JAVASCRIPT
-         ================================ -->
-
-    <script src="js/app.js"></script>
-
-    <script src="js/settings.js"></script>
-
-
+        var filteredVideos = allVideos.filter(function(video) {
+            if (type === 'all') return true;
+            return video.type === type;
+        });
+        
+        // Show filtered videos
+        filteredVideos.forEach(function(video) {
+            var card = document.createElement('div');
+            card.className = 'video-card';
+            card.innerHTML = `
+                <div class="video-thumbnail" data-video-id="${video.id}" onclick="playVideo(this)">
+                    <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="${video.title}" loading="lazy">
+                    <div class="play-button">▶</div>
+                </div>
+                <div class="card-info"><strong>${video.title}</strong></div>
+            `;
+            grid.appendChild(card);
+        });
+        
+        // Update active tab
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+    }
+
+    // Function to play video when thumbnail is clicked
+    function playVideo(element) {
+        var videoId = element.getAttribute('data-video-id');
+        element.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allowfullscreen></iframe>`;
+    }
+</script>
+  
 </body>
-
 </html>
